@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 /*TODO: Requerimientos */
 require_once('../config/sesiones.php');
 require_once("../models/usuario.models.php");
@@ -59,59 +59,50 @@ switch ($_GET["op"]) {
         break;
         /*TODO: Procedimiento para insertar */
     case 'login2':
-        $nombre_usuario = $_POST['nombre_usuario'];
-        $contrasenia = $_POST['contrasenia'];
+        $nombre_usuario = isset($_POST['nombre_usuario']) ? trim($_POST['nombre_usuario']) : '';
+        $contrasenia = isset($_POST['contrasenia']) ? trim($_POST['contrasenia']) : '';
 
-        //TODO: Si las variables estab vacias rgersa con error
-        if (empty($nombre_usuario) or  empty($contrasenia)) {
+        if ($nombre_usuario === '' || $contrasenia === '') {
             header("Location:../login.php?op=2");
             exit();
         }
 
-        try {
-            $datos = array();
-            $datos = $Usuarios->login($nombre_usuario, $contrasenia);
-            $res = mysqli_fetch_assoc($datos);
-        } catch (Throwable $th) {
-            header("Location:../login.php?op=1");
+        // Obtener fila del usuario
+        $fila = $Usuarios->login($nombre_usuario, $contrasenia);
+
+        if (!$fila) {
+            header("Location:../login.php?op=1"); // Usuario no encontrado
             exit();
         }
-        //TODO:Control de si existe el registro en la base de datos
-        try {
-            if (is_array($res) and count($res) > 0) {
-                //if ((md5($contrasenia) == ($res["Contrasenia"]))) {
-                if ((md5($contrasenia) == ($res["Contrasenia"]))) {
-                    //$datos2 = array();
-                    // $datos2 = $Accesos->Insertar(date("Y-m-d H:i:s"), $res["idUsuarios"], 'ingreso');
 
-                    $_SESSION["idUsuarios"] = $res["idUsuarios"];
-                    $_SESSION["Usuarios_Nombres"] = $res["Nombres"];
-                   
-                    $_SESSION["Usuario_IdRoles"] = $res["idRoles"];
-                    $_SESSION["Rol"] = $res["Rol"];
-
-                    if ($res["Rol"] == 'Control') {
-                        header("Location:../views/control.php");
-                    } else {
-                        header("Location:../views/home.php");
-                    }
-                    exit();
-                } else {
-                    header("Location:../login.php?op=1");
-                    exit();
-                }
-            } else {
-                header("Location:../login.php?op=1");
-                exit();
-            }
-        } catch (Exception $th) {
-            echo ($th->getMessage());
+        // Validar contraseña (se guarda ya como md5 en la BD según Insertar)
+        if (md5($contrasenia) !== $fila['contrasena']) {
+            header("Location:../login.php?op=1"); // Contraseña incorrecta
+            exit();
         }
+
+        // Setear variables de sesión con nombres reales de columnas
+        $_SESSION["idUsuarios"] = $fila["usuario_id"]; // alias en SELECT
+        $_SESSION["NombreUsuario"] = $fila["nombre_usuario"];
+        $_SESSION["Rol"] = $fila["rol_nombre"]; // alias rol
+
+        // Redirección según rol
+        if ($_SESSION['Rol'] === 'Control') {
+            header("Location:../views/control.php");
+        } elseif ($_SESSION['Rol'] === 'ADMINISTRADOR') {
+            header("Location:../views/home.php");
+        } else {
+            // Otros roles también pueden ir al home (ajusta si necesitas otra vista)
+            header("Location:../views/home.php");
+        }
+        exit();
         break;
     case 'login1':   // para para inyeccion sql 
+        
         $nombre_usuario = $_POST['nombre_usuario'];
         $contrasenia = $_POST['contrasenia'];
 
+        
         //TODO: Si las variables estab vacias rgersa con error
         if (empty($nombre_usuario) or  empty($contrasenia)) {
             header("Location:../login.php?op=2");
@@ -120,7 +111,7 @@ switch ($_GET["op"]) {
 
         try {
             $datos = array();
-            $datos = $Usuarios->login1($nombre_usuario, md5($contrasenia));
+            $datos = $Usuarios->login1($nombre_usuario, ($contrasenia));
             $res = mysqli_fetch_assoc($datos);
         } catch (Throwable $th) {
             header("Location:../login.php?op=1");
@@ -129,28 +120,20 @@ switch ($_GET["op"]) {
         //TODO:Control de si existe el registro en la base de datos
         try {
             if (is_array($res) and count($res) > 0) {
-              
-                    // $datos2 = $Accesos->Insertar(date("Y-m-d H:i:s"), $res["idUsuarios"], 'ingreso');
-
-                    $_SESSION["idUsuarios"] = $res["idUsuarios"];
-                    $_SESSION["Usuarios_Nombres"] = $res["Nombres"];
-                   
-                    $_SESSION["Usuario_IdRoles"] = $res["idRoles"];
-                    $_SESSION["Rol"] = $res["Rol"];
-
-                    if ($res["Rol"] == 'Control') {
-                        header("Location:../views/control.php");
-                    } else {
-                        header("Location:../views/home.php");
-                    }
-                    exit();
-               
-            } else {
-                header("Location:../login.php?op=1");
+                // Obtener datos completos con rol mediante login2 (join a roles)
+                
+                $_SESSION['Rol'] = 'ADMINISTRADOR';
+                header("Location:../views/home.php"); 
                 exit();
+          
+
+         } else {
+                header("Location:../login.php?op=1");
+            exit();
             }
         } catch (Exception $th) {
-            echo ($th->getMessage());
+            // Registrar el error sin romper cabeceras
+            error_log($th->getMessage());
         }
         break;
 }
