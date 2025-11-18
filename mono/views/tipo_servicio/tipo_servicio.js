@@ -1,9 +1,9 @@
 function init() {
-  $("#form_usuarios").on("submit", (e) => {
+  $("#form_tipo_servicio").on("submit", (e) => {
     GuardarEditar(e);
   });
 }
-const ruta = "../../controllers/usuario.controllers.php?op=";
+const ruta = "../../controllers/tipo_servicio.controllers.php?op=";
 
 $().ready(() => {
   CargaLista();
@@ -11,23 +11,23 @@ $().ready(() => {
 
 var CargaLista = () => {
   var html = "";
-  $.get(ruta + "todos", (ListUsuarios) => {
-    ListUsuarios = JSON.parse(ListUsuarios);
-    console.log(ListUsuarios);
-    $.each(ListUsuarios, (index, usuario) => {
+  $.get(ruta + "todos", (Lista_Servicios) => {
+    Lista_Servicios = JSON.parse(Lista_Servicios);
+    
+    $.each(Lista_Servicios, (index, servicio) => {
       html += `<tr>
             <td>${index + 1}</td>
-            <td>${usuario.nombre_usuario}</td>
-            <td>${usuario.nombre}</td>
+            <td>${servicio.detalle}</td>
+            <td>${servicio.valor}</td>
 <td>
-<button class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#ModalUsuarios" onclick='uno(${
-        usuario.id
+<button class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#ModalTipo_Servicio" onclick='uno(${
+        servicio.id
       })'>Editar</button>
 <button class='btn btn-danger' onclick='eliminar(${
-        usuario.id
+        servicio.id
       })'>Eliminar</button>
       <button class='btn btn-warning' onclick='eliminarsuave(${
-        usuario.id
+        servicio.id
       })'>Eliminar Suave</button>
            </td>
            </tr> `;
@@ -38,29 +38,27 @@ var CargaLista = () => {
 
 var GuardarEditar = (e) => {
   e.preventDefault();
-  var DatosFormularioUsuario = new FormData($("#form_usuarios")[0]);
+  var DatosFormularioServicio = new FormData($("#form_tipo_servicio")[0]);
   var accion = "";
-  var SucursalId = document.getElementById("idUsuarios").value;
+  var id = document.getElementById("idTipoServicio").value;
 
-  if (SucursalId > 0) {
+  if (id > 0) {
     accion = ruta + "actualizar";
-    DatosFormularioUsuario.append("id", SucursalId);
+    DatosFormularioServicio.append("idTipoServicio", id);
   } else {
     accion = ruta + "insertar";
   }
 
-  for (var pair of DatosFormularioUsuario.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
+
   $.ajax({
     url: accion,
     type: "post",
-    data: DatosFormularioUsuario,
+    data: DatosFormularioServicio,
     processData: false,
-    contentType: false,
+    contentType: false, 
     cache: false,
     success: (respuesta) => {
-      console.log(respuesta);
+     
       respuesta = JSON.parse(respuesta);
       if (respuesta == "ok") {
         alert("Se guardo con éxito");
@@ -73,24 +71,26 @@ var GuardarEditar = (e) => {
   });
 };
 
-var uno = async (idUsuarios) => {
-  console.log(idUsuarios);
-  await roles();
-  $.post(ruta + "uno", { idUsuarios: idUsuarios }, (usuarios) => {
-    usuarios = JSON.parse(usuarios);
-    console.log(usuarios);
-    document.getElementById("idUsuarios").value = usuarios.id;
-    document.getElementById("NombreUsuario").value = usuarios.nombre_usuario;
-    document.getElementById("contrasenia").value = usuarios.contrasenia;
-    document.getElementById("id_rol").value = usuarios.id_rol;
-  
+var uno = async (idTipoServicio) => {
+  $.post(ruta + "uno", { id_tipo_servicio: idTipoServicio }, (tipo_servicio) => {
+    tipo_servicio = JSON.parse(tipo_servicio);
+    console.log(tipo_servicio);
+    document.getElementById("idTipoServicio").value = tipo_servicio.id;
+    document.getElementById("detalle").value = tipo_servicio.detalle;
+    document.getElementById("valor").value = tipo_servicio.valor;
+    if (tipo_servicio.estado == 1) {
+      document.getElementById("estado").checked = true;
+    } else {
+      document.getElementById("estado").checked = false;
+    }
+    updateEstadoLabel();
   });
 };
 
 
 
-var eliminar = (idUsuarios) => {
-  $.post(ruta + "eliminar", { idUsuarios: idUsuarios }, (respuesta) => {
+var eliminar = (idTipoServicio) => {
+  $.post(ruta + "eliminar", { idTipoServicio: idTipoServicio }, (respuesta) => {
     respuesta = JSON.parse(respuesta);
     if (respuesta == "ok") {
       alert("Se eliminó con éxito");
@@ -100,8 +100,8 @@ var eliminar = (idUsuarios) => {
     }
   });
 };
-var eliminarsuave = (idUsuarios) => {
-  $.post(ruta + "eliminarsuave", { idUsuarios: idUsuarios }, (respuesta) => {
+var eliminarsuave = (idTipoServicio) => {
+  $.post(ruta + "eliminarsuave", { idTipoServicio: idTipoServicio  }, (respuesta) => {
     respuesta = JSON.parse(respuesta);
     if (respuesta == "ok") {
       alert("Se eliminó con éxito");
@@ -112,10 +112,10 @@ var eliminarsuave = (idUsuarios) => {
   });
 };
 var LimpiarCajas = () => {
-  document.getElementById("idUsuarios").value = "";
-  document.getElementById("NombreUsuario").value = "";
-  document.getElementById("contrasenia").value = "";
-  $("#ModalUsuarios").modal("hide");
+  document.getElementById("idTipoServicio").value = "";
+  document.getElementById("Detalle").value = "";
+  document.getElementById("Valor").value = "";
+  $("#ModalTipo_Servicio").modal("hide");
 };
 
 var updateEstadoLabel = () => {

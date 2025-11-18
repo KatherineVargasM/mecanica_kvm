@@ -18,9 +18,9 @@ switch ($_GET["op"]) {
         break;
         /*TODO: Procedimiento para sacar un registro */
     case 'uno':
-        $idUsuarios = $_POST["idUsuarios"];
+        $idTipoServicio = $_POST["id_tipo_servicio"];
         $datos = array();
-        $datos = $Tipo_Servicio->uno($idUsuarios);
+        $datos = $Tipo_Servicio->uno($idTipoServicio);
         $res = mysqli_fetch_assoc($datos);
         echo json_encode($res);
         break;
@@ -48,7 +48,7 @@ switch ($_GET["op"]) {
         $estado = $_POST["estado"];
             
         $datos = array();
-        $datos = $Tipo_Servicio->Actualizar($idTipoServicio, $detalle, $valor, $estado);
+        $datos = $Tipo_Servicio->Actualizar($idTipoServicio, $detalle, $valor, $estado=="on"?1:0);
         echo json_encode($datos);
         break;
         /*TODO: Procedimiento para eliminar */

@@ -36,20 +36,20 @@ require_once('../../config/sesiones.php');  ?>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form id="form_usuarios" method="post">
+            <form id="form_tipo_servicio" method="post">
                 <input type="hidden" name="idTipoServicio" id="idTipoServicio">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="Detalle">Detalle</label>
-                        <input type="text" name="Detalle" id="Detalle" class="form-control" placeholder="Ingrese el detalle del servicio" required>
+                        <input type="text" name="detalle" id="detalle" class="form-control" placeholder="Ingrese el detalle del servicio" required>
                     </div>
                     <div class="form-group">
-                        <label for="Valor">Valor</label>
-                        <input type="text" name="Valor" id="Valor" class="form-control" placeholder="Ingrese el valor del servicio" required>
+                        <label for="valor">Valor</label>
+                        <input type="text" name="valor" id="valor" class="form-control" placeholder="Ingrese el valor del servicio" required>
                     </div>
                      <label for="estado" >Estado</label>
                     <div class="form-check form-switch">
-                        <input name="estado" id="estado" required onchange="updateEstadoLabel()" class="form-check-input" type="checkbox" role="switch" id="chbEstado">
+                        <input name="estado" id="estado"  onchange="updateEstadoLabel()" class="form-check-input" type="checkbox" role="switch" id="chbEstado">
                         <label class="form-check-label" for="chbEstado" id="lblEstado">No Activo</label>
                     </div>
                 </div>
