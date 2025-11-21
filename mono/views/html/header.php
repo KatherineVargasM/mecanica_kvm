@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <span class="fw-semibold d-block"></span>
-                                    <small class="text-muted"><?php echo $_SESSION["NombreUsuario"]; ?></small>
+                                    <small class="text-muted"><?php echo $_SESSION["NombreUsuario"];  echo  $_SESSION["idUsuarios"]?></small>
                                 </div>
                             </div>
                         </a>
