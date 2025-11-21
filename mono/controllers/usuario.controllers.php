@@ -123,22 +123,18 @@ switch ($_GET["op"]) {
             header("Location:../login.php?op=1");
             exit();
         }
-        //TODO:Control de si existe el registro en la base de datos
         try {
             if (is_array($res) and count($res) > 0) {
-                // Obtener datos completos con rol mediante login2 (join a roles)
-                
                 $_SESSION['Rol'] = 'ADMINISTRADOR';
+                $_SESSION["idUsuarios"] = $res["id"];
+                $_SESSION["NombreUsuario"] = $res["nombre_usuario"];
                 header("Location:../views/home.php"); 
                 exit();
-          
-
          } else {
                 header("Location:../login.php?op=1");
             exit();
             }
         } catch (Exception $th) {
-            // Registrar el error sin romper cabeceras
             error_log($th->getMessage());
         }
         break;

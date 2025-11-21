@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <span class="fw-semibold d-block"></span>
-                                    <small class="text-muted">Admin</small>
+                                    <small class="text-muted"><?php echo $_SESSION["NombreUsuario"]; ?></small>
                                 </div>
                             </div>
                         </a>

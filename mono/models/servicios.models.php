@@ -1,4 +1,3 @@
-
 <?php
 //TODO: Requerimientos 
 require_once('../config/conexion.php');
@@ -10,129 +9,82 @@ class Servicios
     {
         $con = new ClaseConectar();
         $con = $con->ProcedimientoConectar();
-        $cadena = "SELECT usuarios.*, roles.id as IdRol, roles.nombre FROM `usuarios` inner JOIN roles on usuarios.id_rol = roles.id where usuarios.activo = 1";
+        $cadena = "SELECT * FROM `servicios`";
         $datos = mysqli_query($con, $cadena);
-        return $datos;
+        // Cerrar conexión
         $con->close();
+        return $datos;
     }
+
     /*TODO: Procedimiento para sacar un registro*/
-    public function uno($idUsuarios)
+    public function uno($idServicio)
     {
         $con = new ClaseConectar();
         $con = $con->ProcedimientoConectar();
-        $cadena = "SELECT * FROM `usuarios` inner JOIN roles on usuarios.id_rol = roles.id where usuarios.id_rol =  $idUsuarios and usuarios.activo = 1";
+        $cadena = "SELECT * FROM `servicios` WHERE `id` = $idServicio";
         $datos = mysqli_query($con, $cadena);
-        return $datos;
+        // Cerrar conexión
         $con->close();
-    }
-   
-    public function unoNombreUsuario($NombreUsuario) 
-    {
-        $con = new ClaseConectar();
-        $con = $con->ProcedimientoConectar();
-        $cadena = "SELECT * FROM `usuarios` WHERE `nombre_usuario`='$NombreUsuario' and activo = 1";
-        $datos = mysqli_query($con, $cadena);
         return $datos;
-        $con->close();
     }
-   
+
     /*TODO: Procedimiento para insertar */
-    public function Insertar($nombre_usuario, $contrasena, $id_rol)
+    // Si no envías fecha_servicio, se usa el DEFAULT (CURRENT_TIMESTAMP)
+    public function Insertar($id_vehiculo, $id_usuario)
     {
         $con = new ClaseConectar();
         $con = $con->ProcedimientoConectar();
-        $cadena = "INSERT into usuarios(nombre_usuario, contrasena, id_rol, fecha_creacion, activo) 
-        values ( '$nombre_usuario', '$contrasena', $id_rol, curdate(), 1)";
-        if (mysqli_query($con, $cadena)) {
-            return 'ok';
-        } else {
-            return 'Error al insertar en la base de datos';
-        }
+            $cadena = "INSERT INTO `servicios`(id_vehiculo, id_usuario, fecha_servicio) 
+                       VALUES ($id_vehiculo, $id_usuario, curdate())";
+
+     if (mysqli_query($con, $cadena)) {
+        $idGenerado = mysqli_insert_id($con);
         $con->close();
+        return $idGenerado;
+        } else {
+            $con->close();
+            return 0; // 0 = error
+        }
     }
-   
 
     /*TODO: Procedimiento para actualizar */
-    public function Actualizar($idUsuarios, $nombre_usuario, $contrasena, $id_rol)
+    public function Actualizar($idServicio, $id_vehiculo, $id_usuario, $fecha_servicio)
     {
         $con = new ClaseConectar();
         $con = $con->ProcedimientoConectar();
-        $cadena = "update usuarios set nombre_usuario='$nombre_usuario', contrasena='$contrasena', id_rol=$id_rol, fecha_creacion=curdate() where id= $idUsuarios";
-      
-        if (mysqli_query($con, $cadena)) {
 
-            return 'ok';
+        $cadena = "UPDATE `servicios` 
+                   SET `id_vehiculo` = $id_vehiculo,
+                       `id_usuario` = $id_usuario,
+                       `fecha_servicio` = 'curdate()'
+                   WHERE `id` = $idServicio";
+
+        if (mysqli_query($con, $cadena)) {
+            $respuesta = 'ok';
         } else {
-            return 'error al actualizar el registro';
+            $respuesta = 'error al actualizar el registro';
         }
+
+        // Cerrar conexión
         $con->close();
+        return $respuesta;
     }
+
     /*TODO: Procedimiento para Eliminar */
-    public function Eliminar($idUsuarios)
+    public function Eliminar($idServicio)
     {
         $con = new ClaseConectar();
         $con = $con->ProcedimientoConectar();
-        $cadena = "DELETE FROM `usuarios` WHERE id = $idUsuarios";
-      
-        if (mysqli_query($con, $cadena)) {
-            return 'ok';
-        } else {
-            return false;
-        }
-        $con->close();
-    }
-    /*TODO: Procedimiento para Eliminar */
-    public function Eliminarsuave($idUsuarios)
-    {
-        $con = new ClaseConectar();
-        $con = $con->ProcedimientoConectar();
-        $cadena = "UPDATE `usuarios` SET `activo`=0 WHERE id = $idUsuarios";
-        if (mysqli_query($con, $cadena)) {
-            return 'ok';
-        } else {
-            return false;
-        }
-        $con->close();
-    }
+        $cadena = "DELETE FROM `servicios` WHERE `id` = $idServicio";
 
-     public function login1($nombre_usuario, $contrasena){
-        
-        try{
-             $con = new ClaseConectar();
-       
-        $con = $con->ProcedimientoConectar();
-       
-        $cadena = "select * from usuarios where nombre_usuario='$nombre_usuario' and contrasena='$contrasena'";
-  
-        $datos = mysqli_query($con,$cadena);
-        $con->close();
-        return $datos;
+        if (mysqli_query($con, $cadena)) {
+            $respuesta = 'ok';
+        } else {
+            $respuesta = false;
         }
-        catch(Throwable $th){
-            echo 'Error en el try ' . $th->getMessage();
-        }
-       
-    }
-    public function login2($nombre_usuario){
-        $con = new ClaseConectar();
-        $con = $con->ProcedimientoConectar();
-        // Se obtiene información del usuario y del rol con alias para evitar colisiones de nombres
-        $cadena = "SELECT usuarios.id AS usuario_id, usuarios.nombre_usuario, usuarios.contrasena, usuarios.id_rol, roles.nombre AS rol_nombre, roles.descripcion AS rol_descripcion FROM usuarios INNER JOIN roles ON usuarios.id_rol = roles.id WHERE usuarios.nombre_usuario='$nombre_usuario' LIMIT 1";
-        $datos = mysqli_query($con, $cadena);
-        $con->close();
-        return $datos;
-    }
 
-    // Nuevo método login (usuario + contraseña) para validar credenciales y devolver fila
-    public function login($nombre_usuario, $contrasenia)
-    {
-        $con = new ClaseConectar();
-        $con = $con->ProcedimientoConectar();
-        // Obtiene la fila del usuario
-        $cadena = "SELECT usuarios.id AS usuario_id, usuarios.nombre_usuario, usuarios.contrasena, usuarios.id_rol, roles.nombre AS rol_nombre, roles.descripcion AS rol_descripcion FROM usuarios INNER JOIN roles ON usuarios.id_rol = roles.id WHERE usuarios.nombre_usuario='$nombre_usuario' LIMIT 1";
-        $datos = mysqli_query($con, $cadena);
-        $fila = mysqli_fetch_assoc($datos);
+        // Cerrar conexión
         $con->close();
-        return $fila; // retorna array asociativo o null
+        return $respuesta;
     }
 }
