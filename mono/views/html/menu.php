@@ -33,15 +33,8 @@
             <ul class="menu-sub">
 
                 <li class="menu-item">
-                    <a href="empleado/empleado.views.php" target="base" class="menu-link">
-                        <?php $_SESSION['rutas'] = 'Empleados'; ?>
-                        <div data-i18n="Without navbar">Empleados</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="Reportes/resportes.views.php" target="base" class="menu-link">
-                        <?php $_SESSION['rutas'] = 'Reportes'; ?>
-                        <div data-i18n="Container">Reportes</div>
+                    <a href="usuarios/usuarios.views.php" target="base" class="menu-link">
+                        <div data-i18n="Blank">Usuarios</div>
                     </a>
                 </li>
 
@@ -50,19 +43,42 @@
                         <div data-i18n="Fluid">Servicios</div>
                     </a>
                 </li>
+
                 <li class="menu-item">
                     <a href="orden_trabajo/orden_trabajo.views.php" target="base" class="menu-link">
-                        <div data-i18n="Blank">Ordenes de Trabajo</div>
+                        <div data-i18n="Blank">Órdenes de Trabajo</div>
                     </a>
                 </li>
+
+                <li class="menu-item">
+                    <a href="clientes/clientes.views.php" target="base" class="menu-link">
+                        <div data-i18n="Blank">Clientes</div>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="vehiculos/vehiculos.views.php" target="base" class="menu-link">
+                        <div data-i18n="Blank">Vehículos</div>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="empleado/empleado.views.php" target="base" class="menu-link">
+                        <?php $_SESSION['rutas'] = 'Empleados'; ?>
+                        <div data-i18n="Without navbar">Empleados</div>
+                    </a>
+                </li>
+
                 <li class="menu-item">
                     <a href="tipo/tipoacceso.views.php" target="base" class="menu-link">
                         <div data-i18n="Blank">Tipos de Acceso</div>
                     </a>
                 </li>
+
                 <li class="menu-item">
-                    <a href="usuarios/usuarios.views.php" target="base" class="menu-link">
-                        <div data-i18n="Blank">Usuarios</div>
+                    <a href="Reportes/resportes.views.php" target="base" class="menu-link">
+                        <?php $_SESSION['rutas'] = 'Reportes'; ?>
+                        <div data-i18n="Container">Reportes</div>
                     </a>
                 </li>
 

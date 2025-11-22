@@ -1,10 +1,10 @@
 <?php
-//TODO: Requerimientos 
+
 require_once('../config/conexion.php');
 
 class Tipo_Servicio
 {
-    /*TODO: Procedimiento para sacar todos los registros*/
+
     public function todos()
     {
         $con = new ClaseConectar();
@@ -14,7 +14,7 @@ class Tipo_Servicio
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para sacar un registro*/
+
     public function uno($idUsuarios)
     {
         $con = new ClaseConectar();
@@ -36,7 +36,7 @@ class Tipo_Servicio
         $con->close();
     }
    
-    /*TODO: Procedimiento para insertar */
+
     public function Insertar($detalle, $valor)
     {
         $con = new ClaseConectar();
@@ -52,7 +52,7 @@ class Tipo_Servicio
     }
    
 
-    /*TODO: Procedimiento para actualizar */
+
     public function Actualizar($idTipoServicio, $detalle, $valor, $estado)
     {
         $con = new ClaseConectar();
@@ -67,7 +67,7 @@ class Tipo_Servicio
         }
         $con->close();
     }
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminar($idTipoServicio)
     {
         $con = new ClaseConectar();
@@ -81,7 +81,7 @@ class Tipo_Servicio
         }
         $con->close();
     }
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminarsuave($idTipoServicio)
     {
         $con = new ClaseConectar();

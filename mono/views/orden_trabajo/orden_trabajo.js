@@ -1,13 +1,10 @@
-/* ============================================================
-   INICIALIZACIÓN
-   ============================================================ */
 function init() {
-  // Guardar / Editar
+
   $("#form_orden_trabajo").on("submit", (e) => {
     GuardarEditarOrden(e);
   });
 
-  // Agregar ítem
+
   $("#btnAgregarItem").on("click", () => {
     AgregarItemFila();
   });
@@ -25,12 +22,10 @@ let listaVehiculos     = [];
 $().ready(() => {
   CargarCombosBase();
   CargaLista();
-  AgregarItemFila(); // Primera fila
+  AgregarItemFila(); 
 });
 
-/* ============================================================
-   LISTADO DE ÓRDENES DE TRABAJO
-   ============================================================ */
+
 var CargaLista = () => {
   let html = "";
   $.get(rutaOrdenTrabajo + "todos", (Lista_Ordenes) => {
@@ -64,16 +59,14 @@ var CargaLista = () => {
   });
 };
 
-/* ============================================================
-   CARGA DE COMBOS
-   ============================================================ */
+
 function CargarCombosBase() {
   CargarUsuarios();
   CargarVehiculos();
   CargarTiposServicio();
 }
 
-/* ---------- USUARIOS ---------- */
+
 function CargarUsuarios() {
   $.get(rutaUsuarios + "todos", (data) => {
     if (!data) return;
@@ -90,7 +83,7 @@ function CargarUsuarios() {
   });
 }
 
-/* ---------- VEHÍCULOS ---------- */
+
 function CargarVehiculos() {
   $.get(rutaVehiculos + "todos", (data) => {
     if (!data) return;
@@ -104,14 +97,13 @@ function CargarVehiculos() {
 
     $("#id_vehiculo").html(html);
 
-    // Seleccionar vehículo ID = 1 por defecto
     if (listaVehiculos.some(x => String(x.id) === "1")) {
       $("#id_vehiculo").val("1");
     }
   });
 }
 
-/* ---------- TIPOS DE SERVICIO ---------- */
+
 function CargarTiposServicio() {
   $.get(rutaTipoServicio + "todos", (data) => {
     if (!data) return;
@@ -119,9 +111,7 @@ function CargarTiposServicio() {
   });
 }
 
-/* ============================================================
-   ÍTEMS DINÁMICOS DE ORDEN DE TRABAJO
-   ============================================================ */
+
 var AgregarItemFila = async (item = null) => {
   let opcionesTipo = `<option value="">Seleccione tipo de servicio</option>`;
   await $.each(listaTiposServicio, (i, t) => {
@@ -169,9 +159,7 @@ var EliminarFilaItem = (btn) => {
   $(btn).closest("tr").remove();
 };
 
-/* ============================================================
-   GUARDAR O ACTUALIZAR ORDEN DE TRABAJO
-   ============================================================ */
+
 function GuardarEditarOrden(e) {
   e.preventDefault();
 
@@ -180,7 +168,7 @@ function GuardarEditarOrden(e) {
   let idServicio = $("#idServicio").val() || 0;
   let accion     = idServicio > 0 ? "actualizar" : "insertar";
 
-  // Construir JSON de ítems
+
   const items = [];
   $("#tbodyItemsOrden tr").each(function () {
     const descripcion = $(this).find(".descripcion-item").val();
@@ -230,9 +218,7 @@ function GuardarEditarOrden(e) {
   });
 }
 
-/* ============================================================
-   EDITAR ORDEN DE TRABAJO
-   ============================================================ */
+
 function editarOrden(idServicio) {
   $.post(rutaOrdenTrabajo + "unoServicio", { idServicio: idServicio }, (resp) => {
     let data = JSON.parse(resp);
@@ -252,9 +238,7 @@ function editarOrden(idServicio) {
   });
 }
 
-/* ============================================================
-   ELIMINAR ORDEN DE TRABAJO
-   ============================================================ */
+
 var eliminarOrden = (idServicio) => {
   if (!confirm("¿Desea eliminar esta orden?")) return;
 
@@ -271,9 +255,7 @@ var eliminarOrden = (idServicio) => {
   });
 };
 
-/* ============================================================
-   LIMPIAR FORMULARIO
-   ============================================================ */
+
 function LimpiarFormularioOrden() {
   $("#idServicio").val("");
   $("#id_vehiculo").val("");

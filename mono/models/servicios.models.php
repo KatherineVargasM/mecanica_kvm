@@ -1,10 +1,10 @@
 <?php
-//TODO: Requerimientos 
+
 require_once('../config/conexion.php');
 
 class Servicios
 {
-    /*TODO: Procedimiento para sacar todos los registros*/
+
     public function todos()
     {
         $con = new ClaseConectar();
@@ -16,20 +16,18 @@ class Servicios
         return $datos;
     }
 
-    /*TODO: Procedimiento para sacar un registro*/
+  
     public function uno($idServicio)
     {
         $con = new ClaseConectar();
         $con = $con->ProcedimientoConectar();
         $cadena = "SELECT * FROM `servicios` WHERE `id` = $idServicio";
         $datos = mysqli_query($con, $cadena);
-        // Cerrar conexión
+
         $con->close();
         return $datos;
     }
 
-    /*TODO: Procedimiento para insertar */
-    // Si no envías fecha_servicio, se usa el DEFAULT (CURRENT_TIMESTAMP)
     public function Insertar($id_vehiculo, $id_usuario)
     {
         $con = new ClaseConectar();
@@ -43,11 +41,11 @@ class Servicios
         return $idGenerado;
         } else {
             $con->close();
-            return 0; // 0 = error
+            return 0; 
         }
     }
 
-    /*TODO: Procedimiento para actualizar */
+
     public function Actualizar($idServicio, $id_vehiculo, $id_usuario, $fecha_servicio)
     {
         $con = new ClaseConectar();
@@ -65,12 +63,12 @@ class Servicios
             $respuesta = 'error al actualizar el registro';
         }
 
-        // Cerrar conexión
+   
         $con->close();
         return $respuesta;
     }
 
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminar($idServicio)
     {
         $con = new ClaseConectar();
@@ -83,7 +81,6 @@ class Servicios
             $respuesta = false;
         }
 
-        // Cerrar conexión
         $con->close();
         return $respuesta;
     }

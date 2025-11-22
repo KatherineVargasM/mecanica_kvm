@@ -5,7 +5,7 @@ class Clase_Conectar{
     private $host= 'localhost';
     private $uid = 'root';
     private $pwd='root';
-    private $database='QuintoApi';
+    private $database='mecanica';
 
     public function Procedimiento_Conectar(){
         $this->conexion = mysqli_connect( $this->host,  $this->uid,  $this->pwd);

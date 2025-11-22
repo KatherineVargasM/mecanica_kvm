@@ -1,6 +1,5 @@
 <?php
 error_reporting(0);
-/*TODO: Requerimientos */
 require_once('../config/sesiones.php');
 require_once("../models/servicios.models.php");
 require_once("../models/orden_trabajo.models.php");
@@ -10,7 +9,7 @@ $OrdenTrabajo = new OrdenTrabajo;
 
 switch ($_GET["op"]) {
 
-    /* TODO: Listar todos los items de orden de trabajo */
+
     case 'todos':
         $datos = array();
         $datos = $OrdenTrabajo->todos();
@@ -20,7 +19,7 @@ switch ($_GET["op"]) {
         echo json_encode($todos);
         break;
 
-    /* TODO: Obtener un ítem de orden de trabajo */
+
     case 'uno':
         $idOrdenTrabajo = $_POST["idOrdenTrabajo"];
         $datos = array();
@@ -29,24 +28,14 @@ switch ($_GET["op"]) {
         echo json_encode($res);
         break;
 
-    /* 
-     * TODO: Insertar una ORDEN DE TRABAJO COMPLETA
-     * 1) Inserta en servicios
-     * 2) Inserta varios items en Orden_Trabajo
-     */
+
     case 'insertar':
 
-        // Datos del servicio
+
         $id_vehiculo     = $_POST["id_vehiculo"];
-        $id_usuario_serv = $_POST["id_usuario"]; // quien registra el servicio
+        $id_usuario_serv = $_POST["id_usuario"]; /
         $fecha_servicio  = isset($_POST["fecha_servicio"]) ? $_POST["fecha_servicio"] : null;
 
-        // Items enviados como JSON en $_POST["items"]
-        // Ejemplo de items:
-        // [
-        //   {"descripcion":"Cambio de bujías","tipo_servicio_id":1,"usuario_id":3,"fecha":"2025-11-20"},
-        //   {"descripcion":"Lavado de motor","tipo_servicio_id":2,"usuario_id":3,"fecha":"2025-11-20"}
-        // ]
         $itemsJson = isset($_POST["items"]) ? $_POST["items"] : "[]";
         $items     = json_decode($itemsJson, true);
 
@@ -56,7 +45,7 @@ switch ($_GET["op"]) {
             "idServicio" => null
         );
 
-        // 1) Guardar primero el SERVICIO
+
         $idServicio = $Servicios->InsertarRetornarId($id_vehiculo, $id_usuario_serv, $fecha_servicio);
 
         if ($idServicio <= 0) {
@@ -66,7 +55,6 @@ switch ($_GET["op"]) {
             break;
         }
 
-        // 2) Guardar los ITEMS de la orden de trabajo
         $errores = 0;
         if (is_array($items)) {
             foreach ($items as $item) {
@@ -104,7 +92,7 @@ switch ($_GET["op"]) {
         echo json_encode($respuesta);
         break;
 
-    /* TODO: Actualizar un ítem de la orden de trabajo */
+
     case 'actualizar':
         $idOrdenTrabajo = $_POST["idOrdenTrabajo"];
         $Descripcion    = $_POST["Descripcion"];
@@ -125,7 +113,6 @@ switch ($_GET["op"]) {
         echo json_encode($datos);
         break;
 
-    /* TODO: Eliminar un ítem de la orden de trabajo */
     case 'eliminar':
         $idOrdenTrabajo = $_POST["idOrdenTrabajo"];
         $datos = array();

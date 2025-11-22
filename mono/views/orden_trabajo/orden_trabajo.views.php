@@ -4,7 +4,7 @@ require_once('../../config/sesiones.php');  ?>
   <span class="text-muted fw-light">RegAsis /</span> Orden de Trabajo
 </h4>
 
-<!-- Listado de Órdenes de Trabajo -->
+
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Lista de Órdenes de Trabajo</h5>
@@ -15,7 +15,7 @@ require_once('../../config/sesiones.php');  ?>
     </div>
 
     <div class="card-body">
-        <!-- Filtro por fecha (opcional para listar por fecha) -->
+
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="filtro_fecha" class="form-label">Filtrar por fecha</label>
@@ -36,14 +36,14 @@ require_once('../../config/sesiones.php');  ?>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0" id="ListaOrdenesTrabajo">
-                    <!-- Se llena por JS -->
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<!-- Modal Orden de Trabajo -->
+
 <div class="modal fade" tabindex="-1" id="ModalOrdenTrabajo">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
@@ -57,7 +57,7 @@ require_once('../../config/sesiones.php');  ?>
                 <input type="hidden" name="idOrdenTrabajo" id="idOrdenTrabajo">
 
                 <div class="modal-body">
-                    <!-- Datos del Servicio -->
+
                     <div class="card mb-3">
                         <div class="card-header">
                             Datos del Servicio
@@ -78,7 +78,7 @@ require_once('../../config/sesiones.php');  ?>
                                     <label for="id_usuario_servicio" class="form-label">Usuario (quien registra)</label>
                                     <select name="id_usuario" id="id_usuario_servicio" class="form-control" required>
                                         <option value="">Seleccione un usuario</option>
-                                        <!-- Se llena por JS -->
+
                                     </select>
                                 </div>
                                 <div class="col-md-4">
@@ -89,7 +89,7 @@ require_once('../../config/sesiones.php');  ?>
                         </div>
                     </div>
 
-                    <!-- Ítems de la Orden de Trabajo -->
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span>Ítems de la Orden de Trabajo</span>
@@ -110,7 +110,6 @@ require_once('../../config/sesiones.php');  ?>
                                         </tr>
                                     </thead>
                                     <tbody id="tbodyItemsOrden">
-                                        <!-- Filas dinámicas de ítems (JS) -->
                                     </tbody>
                                 </table>
                             </div>
@@ -132,5 +131,5 @@ require_once('../../config/sesiones.php');  ?>
 
 <?php require_once('../html/scripts2.php') ?>
 
-<!-- Archivo JS para manejar Servicios + Órdenes de Trabajo -->
+
 <script src="./orden_trabajo.js"></script>
