@@ -5,34 +5,69 @@ function init() {
 }
 const ruta = "../../controllers/tipo_servicio.controllers.php?op=";
 
-$().ready(() => {
+$(document).ready(() => {
   CargaLista();
 });
 
 var CargaLista = () => {
   var html = "";
   $.get(ruta + "todos", (Lista_Servicios) => {
-    Lista_Servicios = JSON.parse(Lista_Servicios);
+    try {
+        Lista_Servicios = JSON.parse(Lista_Servicios);
+        $.each(Lista_Servicios, (index, servicio) => {
+          html += `<tr>
+                <td>${index + 1}</td>
+                <td>${servicio.detalle}</td>
+                <td>${servicio.valor}</td>
+                <td>
+                    <button class='btn btn-primary btn-sm' onclick='uno(${servicio.id})'>
+                        <i class="bx bx-edit-alt"></i> Editar
+                    </button>
+                    <button class='btn btn-danger btn-sm' onclick='eliminar(${servicio.id})'>
+                        <i class="bx bx-trash"></i> Eliminar
+                    </button>
+                    <button class='btn btn-warning btn-sm' onclick='eliminarsuave(${servicio.id})'>
+                        <i class="bx bx-user-x"></i> Eliminar Suave
+                    </button>
+               </td>
+               </tr> `;
+        });
+        $("#ListaServicios").html(html);
+    } catch (error) {
+        console.error("Error cargando lista", error);
+    }
+  });
+};
+
+var nuevo = () => {
+    $("#tituloModal").html("Nuevo Servicio");
+    $("#form_tipo_servicio")[0].reset();
+    $("#idTipoServicio").val("");
     
-    $.each(Lista_Servicios, (index, servicio) => {
-      html += `<tr>
-            <td>${index + 1}</td>
-            <td>${servicio.detalle}</td>
-            <td>${servicio.valor}</td>
-<td>
-<button class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#ModalTipo_Servicio" onclick='uno(${
-        servicio.id
-      })'>Editar</button>
-<button class='btn btn-danger' onclick='eliminar(${
-        servicio.id
-      })'>Eliminar</button>
-      <button class='btn btn-warning' onclick='eliminarsuave(${
-        servicio.id
-      })'>Eliminar Suave</button>
-           </td>
-           </tr> `;
-    });
-    $("#ListaUsuarios").html(html);
+    $("#estado").prop("checked", true);
+    updateEstadoLabel();
+    
+    $("#ModalTipo_Servicio").modal("show");
+};
+
+var uno = async (idTipoServicio) => {
+  $("#tituloModal").html("Editar Servicio");
+  
+  $.post(ruta + "uno", { id_tipo_servicio: idTipoServicio }, (tipo_servicio) => {
+    tipo_servicio = JSON.parse(tipo_servicio);
+    
+    $("#idTipoServicio").val(tipo_servicio.id);
+    $("#detalle").val(tipo_servicio.detalle);
+    $("#valor").val(tipo_servicio.valor);
+    
+    if (tipo_servicio.estado == 1) {
+      $("#estado").prop("checked", true);
+    } else {
+      $("#estado").prop("checked", false);
+    }
+    updateEstadoLabel();
+    
+    $("#ModalTipo_Servicio").modal("show");
   });
 };
 
@@ -40,7 +75,7 @@ var GuardarEditar = (e) => {
   e.preventDefault();
   var DatosFormularioServicio = new FormData($("#form_tipo_servicio")[0]);
   var accion = "";
-  var id = document.getElementById("idTipoServicio").value;
+  var id = $("#idTipoServicio").val();
 
   if (id > 0) {
     accion = ruta + "actualizar";
@@ -48,7 +83,6 @@ var GuardarEditar = (e) => {
   } else {
     accion = ruta + "insertar";
   }
-
 
   $.ajax({
     url: accion,
@@ -58,63 +92,49 @@ var GuardarEditar = (e) => {
     contentType: false, 
     cache: false,
     success: (respuesta) => {
-     
       respuesta = JSON.parse(respuesta);
       if (respuesta == "ok") {
-        alert("Se guardo con éxito");
+        alert("Se guardó con éxito");
         CargaLista();
         LimpiarCajas();
       } else {
-        alert("no tu pendejada");
+        alert("Error al guardar: " + respuesta);
       }
     },
   });
 };
 
-var uno = async (idTipoServicio) => {
-  $.post(ruta + "uno", { id_tipo_servicio: idTipoServicio }, (tipo_servicio) => {
-    tipo_servicio = JSON.parse(tipo_servicio);
-    console.log(tipo_servicio);
-    document.getElementById("idTipoServicio").value = tipo_servicio.id;
-    document.getElementById("detalle").value = tipo_servicio.detalle;
-    document.getElementById("valor").value = tipo_servicio.valor;
-    if (tipo_servicio.estado == 1) {
-      document.getElementById("estado").checked = true;
-    } else {
-      document.getElementById("estado").checked = false;
-    }
-    updateEstadoLabel();
-  });
-};
-
-
-
 var eliminar = (idTipoServicio) => {
-  $.post(ruta + "eliminar", { idTipoServicio: idTipoServicio }, (respuesta) => {
-    respuesta = JSON.parse(respuesta);
-    if (respuesta == "ok") {
-      alert("Se eliminó con éxito");
-      CargaLista();
-    } else {
-      alert("Error al eliminar");
-    }
-  });
+  if(confirm("¿Estás seguro de eliminar permanentemente?")){
+      $.post(ruta + "eliminar", { idTipoServicio: idTipoServicio }, (respuesta) => {
+        respuesta = JSON.parse(respuesta);
+        if (respuesta == "ok") {
+          alert("Se eliminó con éxito");
+          CargaLista();
+        } else {
+          alert("Error al eliminar");
+        }
+      });
+  }
 };
+
 var eliminarsuave = (idTipoServicio) => {
-  $.post(ruta + "eliminarsuave", { idTipoServicio: idTipoServicio  }, (respuesta) => {
-    respuesta = JSON.parse(respuesta);
-    if (respuesta == "ok") {
-      alert("Se eliminó con éxito");
-      CargaLista();
-    } else {
-      alert("Error al eliminar");
-    }
-  });
+  if(confirm("¿Estás seguro de eliminar suavemente?")){
+      $.post(ruta + "eliminarsuave", { idTipoServicio: idTipoServicio  }, (respuesta) => {
+        respuesta = JSON.parse(respuesta);
+        if (respuesta == "ok") {
+          alert("Se eliminó con éxito");
+          CargaLista();
+        } else {
+          alert("Error al eliminar");
+        }
+      });
+  }
 };
+
 var LimpiarCajas = () => {
-  document.getElementById("idTipoServicio").value = "";
-  document.getElementById("Detalle").value = "";
-  document.getElementById("Valor").value = "";
+  $("#idTipoServicio").val("");
+  $("#form_tipo_servicio")[0].reset();
   $("#ModalTipo_Servicio").modal("hide");
 };
 
@@ -130,17 +150,3 @@ var updateEstadoLabel = () => {
 }
 
 init();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
