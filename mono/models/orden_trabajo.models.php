@@ -1,125 +1,127 @@
 <?php
-error_reporting(0);
-require_once('../config/sesiones.php');
-require_once("../models/servicios.models.php");
-require_once("../models/orden_trabajo.models.php");
+require_once('../config/conexion.php');
 
-$Servicios    = new Servicios;
-$OrdenTrabajo = new OrdenTrabajo;
+class OrdenTrabajo
+{
 
-switch ($_GET["op"]) {
+    public function todos()
+    {
+        $con = new ClaseConectar();
+        $con = $con->ProcedimientoConectar();
+        
+        $cadena = "SELECT s.id as idServicio, 
+                          DATE(s.fecha_servicio) as fecha, 
+                          CONCAT(v.marca, ' ', v.modelo) as vehiculo, 
+                          u.nombre_usuario as usuario,
+                          (SELECT COUNT(*) FROM orden_trabajo WHERE Servicio_Id = s.id) as cantidad_items
+                   FROM servicios s
+                   LEFT JOIN vehiculos v ON s.id_vehiculo = v.id
+                   LEFT JOIN usuarios u ON s.id_usuario = u.id
+                   ORDER BY s.fecha_servicio DESC";
+                   
+        $datos = mysqli_query($con, $cadena);
+        $con->close();
+        return $datos;
+    }
 
+    public function uno($idServicio)
+    {
+        $con = new ClaseConectar();
+        $con = $con->ProcedimientoConectar();
+        
 
-    case 'todos':
-        $datos = array();
-        $datos = $OrdenTrabajo->todos();
-        while ($row = mysqli_fetch_assoc($datos)) {
-            $todos[] = $row;
-        }
-        echo json_encode($todos);
-        break;
-
-
-    case 'uno':
-        $idOrdenTrabajo = $_POST["idOrdenTrabajo"];
-        $datos = array();
-        $datos = $OrdenTrabajo->uno($idOrdenTrabajo);
-        $res   = mysqli_fetch_assoc($datos);
-        echo json_encode($res);
-        break;
-
-
-    case 'insertar':
-
-
-        $id_vehiculo     = $_POST["id_vehiculo"];
-        $id_usuario_serv = $_POST["id_usuario"]; /
-        $fecha_servicio  = isset($_POST["fecha_servicio"]) ? $_POST["fecha_servicio"] : null;
-
-        $itemsJson = isset($_POST["items"]) ? $_POST["items"] : "[]";
-        $items     = json_decode($itemsJson, true);
-
-        $respuesta = array(
-            "ok"         => false,
-            "mensaje"    => "",
-            "idServicio" => null
-        );
+        $sqlCabecera = "SELECT * FROM servicios WHERE id = $idServicio";
+        $resCabecera = mysqli_query($con, $sqlCabecera);
+        $cabecera = mysqli_fetch_assoc($resCabecera);
 
 
-        $idServicio = $Servicios->InsertarRetornarId($id_vehiculo, $id_usuario_serv, $fecha_servicio);
-
-        if ($idServicio <= 0) {
-            $respuesta["ok"]      = false;
-            $respuesta["mensaje"] = "Error al insertar el servicio";
-            echo json_encode($respuesta);
-            break;
+        $sqlItems = "SELECT ot.Descripcion as descripcion, 
+                            ot.TipoServicio_Id as tipo_servicio_id, 
+                            ot.Usuario_Id as usuario_id, 
+                            ot.fecha
+                     FROM orden_trabajo ot 
+                     WHERE ot.Servicio_Id = $idServicio";
+        $resItems = mysqli_query($con, $sqlItems);
+        
+        $items = [];
+        while($row = mysqli_fetch_assoc($resItems)) {
+            $items[] = $row;
         }
 
-        $errores = 0;
-        if (is_array($items)) {
+        $con->close();
+        return ["cabecera" => $cabecera, "items" => $items];
+    }
+
+    public function Insertar($id_vehiculo, $id_usuario, $fecha, $items)
+    {
+        $con = new ClaseConectar();
+        $con = $con->ProcedimientoConectar();
+
+        $cadena = "INSERT INTO servicios (id_vehiculo, id_usuario, fecha_servicio) VALUES ($id_vehiculo, $id_usuario, '$fecha')";
+        
+        if (mysqli_query($con, $cadena)) {
+            $idServicio = mysqli_insert_id($con);
+
             foreach ($items as $item) {
-                $Descripcion     = $item["descripcion"];
-                $TipoServicio_Id = $item["tipo_servicio_id"];
-                $Usuario_Id      = $item["usuario_id"];
-                $fechaItem       = isset($item["fecha"]) && $item["fecha"] != "" 
-                                    ? $item["fecha"] 
-                                    : ($fecha_servicio != null ? $fecha_servicio : date('Y-m-d'));
-
-                $resItem = $OrdenTrabajo->Insertar(
-                    $Descripcion,
-                    $idServicio,
-                    $TipoServicio_Id,
-                    $Usuario_Id,
-                    $fechaItem
-                );
-
-                if ($resItem != 'ok') {
-                    $errores++;
-                }
+                $desc = $item['descripcion'];
+                $tipo = $item['tipo_servicio_id'];
+                $usu  = $item['usuario_id'];
+                $fec  = $item['fecha'];
+                
+                $sqlItem = "INSERT INTO orden_trabajo (Descripcion, Servicio_Id, TipoServicio_Id, Usuario_Id, fecha) 
+                            VALUES ('$desc', $idServicio, $tipo, $usu, '$fec')";
+                mysqli_query($con, $sqlItem);
             }
-        }
-
-        if ($errores == 0) {
-            $respuesta["ok"]         = true;
-            $respuesta["mensaje"]    = "Orden de trabajo registrada correctamente";
-            $respuesta["idServicio"] = $idServicio;
+            $con->close();
+            return "ok";
         } else {
-            $respuesta["ok"]         = false;
-            $respuesta["mensaje"]    = "Se registró el servicio pero hubo errores en algunos ítems de la orden de trabajo";
-            $respuesta["idServicio"] = $idServicio;
+            $con->close();
+            return "Error: " . mysqli_error($con);
         }
+    }
 
-        echo json_encode($respuesta);
-        break;
+    public function Actualizar($idServicio, $id_vehiculo, $id_usuario, $fecha, $items)
+    {
+        $con = new ClaseConectar();
+        $con = $con->ProcedimientoConectar();
 
+        $cadena = "UPDATE servicios SET id_vehiculo=$id_vehiculo, id_usuario=$id_usuario, fecha_servicio='$fecha' WHERE id=$idServicio";
+        
+        if (mysqli_query($con, $cadena)) {
+            mysqli_query($con, "DELETE FROM orden_trabajo WHERE Servicio_Id = $idServicio");
 
-    case 'actualizar':
-        $idOrdenTrabajo = $_POST["idOrdenTrabajo"];
-        $Descripcion    = $_POST["Descripcion"];
-        $Servicio_Id    = $_POST["Servicio_Id"];
-        $TipoServicio_Id= $_POST["TipoServicio_Id"];
-        $Usuario_Id     = $_POST["Usuario_Id"];
-        $fecha          = $_POST["fecha"];
+            foreach ($items as $item) {
+                $desc = $item['descripcion'];
+                $tipo = $item['tipo_servicio_id'];
+                $usu  = $item['usuario_id'];
+                $fec  = $item['fecha'];
+                
+                $sqlItem = "INSERT INTO orden_trabajo (Descripcion, Servicio_Id, TipoServicio_Id, Usuario_Id, fecha) 
+                            VALUES ('$desc', $idServicio, $tipo, $usu, '$fec')";
+                mysqli_query($con, $sqlItem);
+            }
+            $con->close();
+            return "ok";
+        } else {
+            $con->close();
+            return "Error: " . mysqli_error($con);
+        }
+    }
 
-        $datos = array();
-        $datos = $OrdenTrabajo->Actualizar(
-            $idOrdenTrabajo,
-            $Descripcion,
-            $Servicio_Id,
-            $TipoServicio_Id,
-            $Usuario_Id,
-            $fecha
-        );
-        echo json_encode($datos);
-        break;
-
-    case 'eliminar':
-        $idOrdenTrabajo = $_POST["idOrdenTrabajo"];
-        $datos = array();
-        $datos = $OrdenTrabajo->Eliminar($idOrdenTrabajo);
-        echo json_encode($datos);
-        break;
-
-    default:
-        break;
+    public function Eliminar($idServicio)
+    {
+        $con = new ClaseConectar();
+        $con = $con->ProcedimientoConectar();
+        
+        mysqli_query($con, "DELETE FROM orden_trabajo WHERE Servicio_Id = $idServicio");
+        
+        if (mysqli_query($con, "DELETE FROM servicios WHERE id = $idServicio")) {
+            $con->close();
+            return "ok";
+        } else {
+            $con->close();
+            return "Error: " . mysqli_error($con);
+        }
+    }
 }
+?>

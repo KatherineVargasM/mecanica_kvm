@@ -1,28 +1,16 @@
 <?php require_once('../html/head2.php');
 require_once('../../config/sesiones.php');  ?>
-<h4 class="fw-bold py-3 mb-4">
-  <span class="text-muted fw-light">RegAsis /</span> Orden de Trabajo
-</h4>
 
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RegAsis /</span> Orden de Trabajo</h4>
 
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Lista de Órdenes de Trabajo</h5>
-        <button type="button" class="btn btn-outline-secondary"  
-            data-bs-toggle="modal" data-bs-target="#ModalOrdenTrabajo">
-            Nueva Orden de Trabajo
+        <h5 class="mb-0">Lista de Órdenes</h5>
+        <button type="button" class="btn btn-primary" onclick="nuevaOrden()">
+             <i class="bx bx-plus me-1"></i> Nueva Orden
         </button>
     </div>
-
     <div class="card-body">
-
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="filtro_fecha" class="form-label">Filtrar por fecha</label>
-                <input type="date" id="filtro_fecha" class="form-control">
-            </div>
-        </div>
-
         <div class="table-responsive text-nowrap">
             <table class="table table-striped" id="tablaOrdenesTrabajo">
                 <thead>
@@ -30,99 +18,71 @@ require_once('../../config/sesiones.php');  ?>
                         <th>#</th>
                         <th>Fecha</th>
                         <th>Vehículo</th>
-                        <th>Usuario</th>
-                        <th>Cant. Ítems</th>
+                        <th>Usuario (Responsable)</th>
+                        <th>Cant. Servicios</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0" id="ListaOrdenesTrabajo">
-
-                </tbody>
+                <tbody id="ListaOrdenesTrabajo"></tbody>
             </table>
         </div>
     </div>
 </div>
 
-
-<div class="modal fade" tabindex="-1" id="ModalOrdenTrabajo">
+<div class="modal fade" tabindex="-1" id="ModalOrdenTrabajo" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal">Nueva Orden de Trabajo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="tituloModal">Nueva Orden</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="LimpiarFormularioOrden()"></button>
             </div>
-
             <form id="form_orden_trabajo" method="post">
                 <input type="hidden" name="idServicio" id="idServicio">
-                <input type="hidden" name="idOrdenTrabajo" id="idOrdenTrabajo">
-
                 <div class="modal-body">
-
                     <div class="card mb-3">
-                        <div class="card-header">
-                            Datos del Servicio
-                        </div>
+                        <div class="card-header">Datos Generales</div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <label for="id_vehiculo" class="form-label">Vehículo</label>
-                                    <select name="id_vehiculo" id="id_vehiculo" class="form-control" required>
-                                        <option value="">Seleccione un vehículo</option>
-                                        <option value="1">Mazda</option>
-                                        <option value="2">Ford</option>
-
-                                        
-                                    </select>
+                                    <label class="form-label">Vehículo</label>
+                                    <select name="id_vehiculo" id="id_vehiculo" class="form-control" required></select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="id_usuario_servicio" class="form-label">Usuario (quien registra)</label>
-                                    <select name="id_usuario" id="id_usuario_servicio" class="form-control" required>
-                                        <option value="">Seleccione un usuario</option>
-
-                                    </select>
+                                    <label class="form-label">Usuario Responsable</label>
+                                    <select name="id_usuario" id="id_usuario_servicio" class="form-control" required></select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="fecha_servicio" class="form-label">Fecha del Servicio</label>
-                                    <input type="date" name="fecha_servicio" id="fecha_servicio" class="form-control">
+                                    <label class="form-label">Fecha</label>
+                                    <input type="date" name="fecha_servicio" id="fecha_servicio" class="form-control" required>
                                 </div>
                             </div>
                         </div>
                     </div>
-
 
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>Ítems de la Orden de Trabajo</span>
-                            <button type="button" class="btn btn-sm btn-primary" id="btnAgregarItem">
-                                Agregar Ítem
-                            </button>
+                            <span>Detalle de Servicios</span>
+                            <button type="button" class="btn btn-sm btn-primary" id="btnAgregarItem"><i class="bx bx-plus"></i> Agregar</button>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm" id="tablaItemsOrden">
-                                    <thead>
-                                        <tr>
-                                            <th>Descripción</th>
-                                            <th>Tipo de Servicio</th>
-                                            <th>Usuario</th>
-                                            <th>Fecha</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbodyItemsOrden">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <small class="text-muted">
-                                Puede agregar varios ítems para la misma orden de trabajo. Cada ítem corresponde a un registro en la tabla <strong>Orden_Trabajo</strong>.
-                            </small>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Tipo Servicio</th>
+                                        <th>Técnico</th>
+                                        <th>Fecha</th>
+                                        <th>Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyItemsOrden"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Orden de Trabajo</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="LimpiarFormularioOrden()">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
@@ -130,6 +90,4 @@ require_once('../../config/sesiones.php');  ?>
 </div>
 
 <?php require_once('../html/scripts2.php') ?>
-
-
 <script src="./orden_trabajo.js"></script>

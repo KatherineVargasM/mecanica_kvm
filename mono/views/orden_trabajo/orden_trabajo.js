@@ -1,13 +1,6 @@
 function init() {
-
-  $("#form_orden_trabajo").on("submit", (e) => {
-    GuardarEditarOrden(e);
-  });
-
-
-  $("#btnAgregarItem").on("click", () => {
-    AgregarItemFila();
-  });
+  $("#form_orden_trabajo").on("submit", (e) => GuardarEditarOrden(e));
+  $("#btnAgregarItem").on("click", () => AgregarItemFila());
 }
 
 const rutaOrdenTrabajo = "../../controllers/orden_trabajo.controller.php?op=";
@@ -19,252 +12,193 @@ let listaTiposServicio = [];
 let listaUsuarios      = [];
 let listaVehiculos     = [];
 
-$().ready(() => {
+$(document).ready(() => {
   CargarCombosBase();
   CargaLista();
-  AgregarItemFila(); 
 });
 
-
 var CargaLista = () => {
-  let html = "";
-  $.get(rutaOrdenTrabajo + "todos", (Lista_Ordenes) => {
-    if (!Lista_Ordenes) return;
-
-    Lista_Ordenes = JSON.parse(Lista_Ordenes);
-
-    $.each(Lista_Ordenes, (i, ot) => {
-      html += `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${ot.fecha}</td>
-          <td>${ot.vehiculo}</td>
-          <td>${ot.usuario}</td>
-          <td>${ot.cantidad_items}</td>
-          <td>
-            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" 
-                    data-bs-target="#ModalOrdenTrabajo"
-                    onclick="editarOrden(${ot.idServicio})">
-              Editar
-            </button>
-            <button class="btn btn-danger btn-sm" onclick="eliminarOrden(${ot.idServicio})">
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      `;
-    });
-
-    $("#ListaOrdenesTrabajo").html(html);
+  $.get(rutaOrdenTrabajo + "todos", (response) => {
+    try {
+        let Lista_Ordenes = (typeof response === "string") ? JSON.parse(response) : response;
+        let html = "";
+        
+        if(Lista_Ordenes.length === 0){
+             html = `<tr><td colspan="6" class="text-center">No hay órdenes registradas</td></tr>`;
+        } else {
+            $.each(Lista_Ordenes, (i, ot) => {
+              html += `<tr>
+                  <td>${i + 1}</td>
+                  <td>${ot.fecha}</td>
+                  <td>${ot.vehiculo}</td>
+                  <td>${ot.usuario}</td>
+                  <td>${ot.cantidad_items}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" onclick="editarOrden(${ot.idServicio})"><i class='bx bx-edit-alt'></i> Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarOrden(${ot.idServicio})"><i class='bx bx-trash'></i> Eliminar</button>
+                  </td>
+                </tr>`;
+            });
+        }
+        $("#ListaOrdenesTrabajo").html(html);
+    } catch (error) {
+        console.error("Error al leer datos:", error);
+    }
   });
 };
 
-
-function CargarCombosBase() {
-  CargarUsuarios();
-  CargarVehiculos();
-  CargarTiposServicio();
-}
-
-
-function CargarUsuarios() {
-  $.get(rutaUsuarios + "todos", (data) => {
-    if (!data) return;
-    data = JSON.parse(data);
-    listaUsuarios = data;
-
-    let html = `<option value="">Seleccione un usuario</option>`;
-    $.each(listaUsuarios, (i, u) => {
-      const nombre = u.nombre_usuario || u.nombres || ("Usuario " + u.id);
-      html += `<option value="${u.id}">${nombre}</option>`;
-    });
-
-    $("#id_usuario_servicio").html(html);
-  });
-}
-
-
-function CargarVehiculos() {
-  $.get(rutaVehiculos + "todos", (data) => {
-    if (!data) return;
-    listaVehiculos = JSON.parse(data);
-
-    let html = `<option value="">Seleccione un vehículo</option>`;
-    $.each(listaVehiculos, (i, v) => {
-      const placa = v.placa || v.descripcion || ("Vehículo " + v.id);
-      html += `<option value="${v.id}">${placa}</option>`;
-    });
-
-    $("#id_vehiculo").html(html);
-
-    if (listaVehiculos.some(x => String(x.id) === "1")) {
-      $("#id_vehiculo").val("1");
-    }
-  });
-}
-
-
-function CargarTiposServicio() {
-  $.get(rutaTipoServicio + "todos", (data) => {
-    if (!data) return;
-    listaTiposServicio = JSON.parse(data);
-  });
-}
-
-
-var AgregarItemFila = async (item = null) => {
-  let opcionesTipo = `<option value="">Seleccione tipo de servicio</option>`;
-  await $.each(listaTiposServicio, (i, t) => {
-    const label = t.detalle || ("Tipo " + t.id);
-    const selected = item && item.TipoServicio_Id == t.id ? "selected" : "";
-    opcionesTipo += `<option value="${t.id}" ${selected}>${label}</option>`;
-  });
-
-  let opcionesUsuarios = `<option value="">Seleccione usuario</option>`;
-  $.each(listaUsuarios, (i, u) => {
-    const label = u.nombre_usuario || u.nombres || ("Usuario " + u.id);
-    const selected = item && item.Usuario_Id == u.id ? "selected" : "";
-    opcionesUsuarios += `<option value="${u.id}" ${selected}>${label}</option>`;
-  });
-
-  let descripcion = item ? item.Descripcion : "";
-  let fecha = item ? item.fecha : $("#fecha_servicio").val() || "";
-
-  const fila = `
-    <tr>
-      <td>
-        <input type="text" class="form-control descripcion-item"
-               value="${descripcion}" placeholder="Descripción">
-      </td>
-      <td>
-        <select class="form-control tipo-servicio-item">${opcionesTipo}</select>
-      </td>
-      <td>
-        <select class="form-control usuario-item">${opcionesUsuarios}</select>
-      </td>
-      <td>
-        <input type="date" class="form-control fecha-item" value="${fecha}">
-      </td>
-      <td>
-        <button type="button" class="btn btn-danger btn-sm"
-                onclick="EliminarFilaItem(this)">X</button>
-      </td>
-    </tr>
-  `;
-
-  $("#tbodyItemsOrden").append(fila);
+var nuevaOrden = () => {
+    $("#tituloModal").html("Nueva Orden");
+    $("#form_orden_trabajo")[0].reset();
+    $("#idServicio").val("");
+    $("#tbodyItemsOrden").empty();
+    AgregarItemFila(); 
+    $("#ModalOrdenTrabajo").modal("show");
 };
-
-var EliminarFilaItem = (btn) => {
-  $(btn).closest("tr").remove();
-};
-
-
-function GuardarEditarOrden(e) {
-  e.preventDefault();
-
-  const Form = new FormData($("#form_orden_trabajo")[0]);
-
-  let idServicio = $("#idServicio").val() || 0;
-  let accion     = idServicio > 0 ? "actualizar" : "insertar";
-
-
-  const items = [];
-  $("#tbodyItemsOrden tr").each(function () {
-    const descripcion = $(this).find(".descripcion-item").val();
-    const tipo        = $(this).find(".tipo-servicio-item").val();
-    const usuario     = $(this).find(".usuario-item").val();
-    const fecha       = $(this).find(".fecha-item").val();
-
-    if (descripcion && tipo) {
-      items.push({
-        descripcion: descripcion,
-        tipo_servicio_id: tipo,
-        usuario_id: usuario,
-        fecha: fecha
-      });
-    }
-  });
-
-  if (items.length === 0) {
-    alert("Debe ingresar al menos un ítem.");
-    return;
-  }
-
-  Form.append("items", JSON.stringify(items));
-  
-  Form.forEach((value, key) => {
-    console.log(key + ': ' + value);
-  });
-
-  $.ajax({
-    url: rutaOrdenTrabajo + accion,
-    type: "post",
-    data: Form,
-    contentType: false,
-    processData: false,
-    success: (resp) => {
-      let r;
-      try { r = JSON.parse(resp); } catch { r = resp; }
-
-      if (r.ok || r === "ok") {
-        alert(r.mensaje || "Orden guardada con éxito");
-        CargaLista();
-        LimpiarFormularioOrden();
-      } else {
-        alert(r.mensaje || "Error en el guardado");
-      }
-    }
-  });
-}
-
 
 function editarOrden(idServicio) {
+  $("#tituloModal").html("Editar Orden");
   $.post(rutaOrdenTrabajo + "unoServicio", { idServicio: idServicio }, (resp) => {
-    let data = JSON.parse(resp);
-
-    const srv  = data.servicio;
-    const items = data.items;
-
+    let data = (typeof resp === "string") ? JSON.parse(resp) : resp;
+    let srv = data.servicio;
+    
     $("#idServicio").val(srv.id);
     $("#id_vehiculo").val(srv.id_vehiculo);
     $("#id_usuario_servicio").val(srv.id_usuario);
     $("#fecha_servicio").val(srv.fecha_servicio);
 
     $("#tbodyItemsOrden").empty();
-    items.forEach(it => AgregarItemFila(it));
+    if(data.items && data.items.length > 0) {
+        data.items.forEach(it => AgregarItemFila(it));
+    } else { 
+        AgregarItemFila(); 
+    }
 
     $("#ModalOrdenTrabajo").modal("show");
   });
 }
 
+function CargarCombosBase() {
+  $.get(rutaUsuarios + "todos", (d) => { 
+      let data = (typeof d === "string") ? JSON.parse(d) : d; 
+      listaUsuarios = data;
+      
+      let html = '<option value="">Seleccione responsable...</option>';
+      
+      data.forEach(u => {
 
-var eliminarOrden = (idServicio) => {
-  if (!confirm("¿Desea eliminar esta orden?")) return;
-
-  $.post(rutaOrdenTrabajo + "eliminar", { idServicio }, (resp) => {
-    let r;
-    try { r = JSON.parse(resp); } catch { r = resp; }
-
-    if (r.ok || r === "ok") {
-      alert(r.mensaje || "Eliminado con éxito");
-      CargaLista();
-    } else {
-      alert(r.mensaje || "Error al eliminar");
-    }
+          if(u.IdRol == 1 || u.IdRol == 2 || u.nombre == 'Administrador' || u.nombre == 'Secretaria'){
+              html += `<option value="${u.id}">${u.nombre_usuario} (${u.nombre})</option>`;
+          }
+      });
+      
+      $("#id_usuario_servicio").html(html);
   });
+
+  $.get(rutaVehiculos + "todos", (d) => { 
+      let data = (typeof d === "string") ? JSON.parse(d) : d; 
+      listaVehiculos = data;
+      let html = '<option value="">Seleccione vehículo...</option>';
+      data.forEach(v => html += `<option value="${v.id}">${v.marca} ${v.modelo} (${v.anio})</option>`);
+      $("#id_vehiculo").html(html);
+  });
+
+  $.get(rutaTipoServicio + "todos", (d) => { 
+      listaTiposServicio = (typeof d === "string") ? JSON.parse(d) : d; 
+  });
+}
+
+var AgregarItemFila = async (item = null) => {
+  let opTipo = '<option value="">Seleccione servicio...</option>';
+  listaTiposServicio.forEach(t => {
+      let selected = (item && item.tipo_servicio_id == t.id) ? "selected" : "";
+      opTipo += `<option value="${t.id}" ${selected}>${t.detalle} - $${t.valor}</option>`;
+  });
+
+  let opUsu = '<option value="">Seleccione técnico...</option>';
+  listaUsuarios.forEach(u => {
+      if(u.IdRol == 3 || u.IdRol == 4 || u.nombre == 'Mecanico' || u.nombre == 'Oficial'){
+          let selected = (item && item.usuario_id == u.id) ? "selected" : "";
+          opUsu += `<option value="${u.id}" ${selected}>${u.nombre_usuario}</option>`;
+      }
+  });
+
+  let desc = item ? item.descripcion : "";
+  let fecha = item ? item.fecha : $("#fecha_servicio").val() || new Date().toISOString().split('T')[0];
+
+  let fila = `<tr>
+      <td><input type="text" class="form-control desc-item" value="${desc}" required placeholder="Detalle del trabajo"></td>
+      <td><select class="form-control tipo-item" required>${opTipo}</select></td>
+      <td><select class="form-control usu-item" required>${opUsu}</select></td> <td><input type="date" class="form-control fec-item" value="${fecha}" required></td>
+      <td><button type="button" class="btn btn-danger btn-sm" onclick="$(this).closest('tr').remove()"><i class='bx bx-trash'></i></button></td>
+    </tr>`;
+    
+  $("#tbodyItemsOrden").append(fila);
 };
 
+function GuardarEditarOrden(e) {
+  e.preventDefault();
+  let items = [];
+  $("#tbodyItemsOrden tr").each(function() {
+      let desc = $(this).find(".desc-item").val();
+      let tipo = $(this).find(".tipo-item").val();
+      let usu = $(this).find(".usu-item").val();
+      let fec = $(this).find(".fec-item").val();
+      
+      if(desc && tipo && usu){
+          items.push({
+              descripcion: desc,
+              tipo_servicio_id: tipo,
+              usuario_id: usu,
+              fecha: fec
+          });
+      }
+  });
+
+  if(items.length === 0) { alert("Agregue al menos un ítem válido"); return; }
+
+  let datos = new FormData($("#form_orden_trabajo")[0]);
+  datos.append("items", JSON.stringify(items));
+  
+  let idServ = $("#idServicio").val();
+  let accion = (idServ && idServ > 0) ? "actualizar" : "insertar";
+  if(accion === "actualizar") datos.append("id", idServ);
+
+  $.ajax({
+    url: rutaOrdenTrabajo + accion,
+    type: "post",
+    data: datos,
+    processData: false,
+    contentType: false,
+    success: (resp) => {
+        let r = (typeof resp === "string") ? JSON.parse(resp) : resp;
+        
+        if(r.status === "ok") {
+            alert("¡Guardado correctamente!");
+            CargaLista();
+            LimpiarFormularioOrden();
+        } else { 
+            alert("Error al guardar: " + (r.mensaje || "Error desconocido")); 
+        }
+    },
+    error: (err) => {
+        console.error(err);
+        alert("Error de servidor. Revise la consola.");
+    }
+  });
+}
+
+var eliminarOrden = (id) => {
+    if(confirm("¿Eliminar orden completa?")) {
+        $.post(rutaOrdenTrabajo + "eliminar", { idServicio: id }, (r) => {
+            let resp = (typeof r === "string") ? JSON.parse(r) : r;
+            if(resp.status === "ok") { alert("Eliminado"); CargaLista(); }
+            else { alert("Error al eliminar: " + resp.mensaje); }
+        });
+    }
+};
 
 function LimpiarFormularioOrden() {
-  $("#idServicio").val("");
-  $("#id_vehiculo").val("");
-  $("#id_usuario_servicio").val("");
-  $("#fecha_servicio").val("");
-
-  $("#tbodyItemsOrden").empty();
-  AgregarItemFila();
-
   $("#ModalOrdenTrabajo").modal("hide");
 }
 
