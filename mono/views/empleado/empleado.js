@@ -105,7 +105,7 @@ var GuardarEditar = (e) => {
                     CargaLista();
                     LimpiarCajas();
                 } else {
-                    alert("Error al guardar: " + (r.mensaje || "Error desconocido"));
+                    alert("Error al guardar: " + (r.mensaje || "Error"));
                 }
             } catch (error) {
                 console.error(error);

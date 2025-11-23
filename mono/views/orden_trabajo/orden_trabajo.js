@@ -155,7 +155,7 @@ function GuardarEditarOrden(e) {
       }
   });
 
-  if(items.length === 0) { alert("Agregue al menos un ítem válido"); return; }
+  if(items.length === 0) { alert("Agregue un ítem válido"); return; }
 
   let datos = new FormData($("#form_orden_trabajo")[0]);
   datos.append("items", JSON.stringify(items));
@@ -183,7 +183,7 @@ function GuardarEditarOrden(e) {
     },
     error: (err) => {
         console.error(err);
-        alert("Error de servidor. Revise la consola.");
+        alert("Error de servidor");
     }
   });
 }

@@ -23,7 +23,7 @@ class ClaseConectar
         $this->db = mysqli_select_db($this->conexion, $this->base);
        
         if (!$this->db) {
-            die("Error: No se encuentra la base de datos '" . $this->base . "'. Asegurate de haber importado el archivo mecanica (1).sql en phpMyAdmin.");
+            die("Error: No se encuentra la base de datos '" . $this->base . "'. Phpmyadmin.");
         }
        
         return $this->conexion;

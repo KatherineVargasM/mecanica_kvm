@@ -38,7 +38,7 @@ switch ($_GET["op"]) {
         $res = $Clientes->Insertar($nombres, $apellidos, $telefono, $correo);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Cliente guardado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Cliente registrado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }
@@ -54,7 +54,7 @@ switch ($_GET["op"]) {
         $res = $Clientes->Actualizar($id, $nombres, $apellidos, $telefono, $correo);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Cliente actualizado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Cliente actualizado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }
@@ -65,7 +65,7 @@ switch ($_GET["op"]) {
         $res = $Clientes->Eliminar($id);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Eliminado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Cliente eliminado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }

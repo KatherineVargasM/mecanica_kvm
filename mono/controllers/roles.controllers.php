@@ -36,7 +36,7 @@ switch ($_GET["op"]) {
         $res = $Roles->Insertar($nombre, $descripcion);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Rol guardado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Rol registrado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }
@@ -50,7 +50,7 @@ switch ($_GET["op"]) {
         $res = $Roles->Actualizar($id, $nombre, $descripcion);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Rol actualizado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Rol actualizado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }
@@ -61,7 +61,7 @@ switch ($_GET["op"]) {
         $res = $Roles->Eliminar($id);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Eliminado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Rol eliminado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }

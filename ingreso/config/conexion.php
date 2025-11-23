@@ -23,7 +23,6 @@ class ClaseConectar
     {
         define('BASE_PATH', realpath(dirname(__FILE__) . '/../') . '/');
 
-        // Autoload para clases
 
     }
 }

@@ -2,7 +2,7 @@
 require_once('../../config/sesiones.php');  ?>
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RegAsis /</span> Usuarios</h4>
 
-<!-- Basic Bootstrap Table -->
+
 <div class="card">
     <button type="button" class="btn btn-outline-secondary" onclick="sucursales(); roles()" data-bs-toggle="modal" data-bs-target="#ModalUsuarios">Nuevo Usuario</button>
 
@@ -27,7 +27,7 @@ require_once('../../config/sesiones.php');  ?>
 </div>
 
 
-<!-- Modal Usuarios-->
+
 
 <div class="modal" tabindex="-1" id="ModalUsuarios">
     <div class="modal-dialog modal-dialog-centered modal-lg">

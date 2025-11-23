@@ -93,12 +93,21 @@ class Usuarios
         $con = $con->ProcedimientoConectar();
         $cadena = "DELETE FROM `usuarios` WHERE id = $idUsuarios";
       
+        // Intentamos borrar...
         if (mysqli_query($con, $cadena)) {
             $con->close();
             return 'ok';
         } else {
+            // Si falla, revisamos el código de error exacto de MySQL
+            $errorNum = mysqli_errno($con);
             $con->close();
-            return false;
+            
+            // El código 1451 significa que hay datos relacionados (claves foráneas)
+            if ($errorNum == 1451) {
+                return 'NO SE PUEDE ELIMINAR: El usuario tiene historial registrado.';
+            }
+            
+            return 'Error al eliminar.';
         }
     }
 

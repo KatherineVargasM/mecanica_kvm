@@ -1,9 +1,9 @@
 <?php
-//TODO: Requerimientos 
+
 require_once('../config/conexion.php');
 class Faltas
 {
-    /*TODO: Procedimiento para sacar todos los registros*/
+
     public function todos($inicio, $fin, $SucursalId)
     {
         if ($inicio == null || $fin == null) {
@@ -42,7 +42,7 @@ class Faltas
         $con->close();
     }
 
-    /*TODO: Procedimiento para insertar */
+
     public function Insertar($EmpleadoId, $Fecha, $Observacion)
     {
         $fechaConHorasMinutos = date("YmdHis");
@@ -78,7 +78,7 @@ class Faltas
             }
         }
     }
-    /*TODO: Procedimiento para actualizar */
+
     public function Actualizar($FaltaId, $EmpleadoId, $Fecha, $Observacion)
     {
         $fechaConHorasMinutos = date("YmdHis");
@@ -109,7 +109,7 @@ class Faltas
 
         $con->close();
     }
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminar($idAccesos)
     {
         $con = new ClaseConectar();
@@ -122,7 +122,7 @@ class Faltas
         }
         $con->close();
     }
-    //public function reporte_general($inicio, $fin)
+
     public function reporte_general()
     {
         $con = new ClaseConectar();

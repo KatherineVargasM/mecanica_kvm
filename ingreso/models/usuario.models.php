@@ -1,10 +1,10 @@
 <?php
-//TODO: Requerimientos 
+
 require_once('../config/conexion.php');
 require_once('../models/Usuarios_Roles.models.php');
 class Usuarios
 {
-    /*TODO: Procedimiento para sacar todos los registros*/
+
     public function todos()
     {
         $con = new ClaseConectar();
@@ -14,7 +14,7 @@ class Usuarios
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para sacar un registro*/
+
     public function uno($idUsuarios)
     {
         $con = new ClaseConectar();
@@ -42,7 +42,7 @@ class Usuarios
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para insertar */
+
     public function Insertar($Nombres, $Apellidos, $Correo, $Contrasenia, $SucursalId, $idRoles, $cedula)
     {
         $con = new ClaseConectar();
@@ -58,7 +58,7 @@ class Usuarios
         $con->close();
     }
 
-    /*TODO: Procedimiento para actualizar */
+
     public function Actualizar($idUsuarios, $Nombres, $Apellidos, $Correo, $Contrasenia, $idRoles, $cedula)
     {
         $con = new ClaseConectar();
@@ -75,7 +75,7 @@ class Usuarios
         }
         $con->close();
     }
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminar($idUsuarios)
     {
         $UsRoles = new Usuarios_Roles();

@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function ejecutarConsulta() {
     mostrarCarga("Verificando...");
 
-    // Simula una operación asíncrona (reemplaza esto con tu consulta real)
+
     setTimeout(function () {
       $.post(
         "controllers/empleado.controllers.php?op=contarCedula",
@@ -123,9 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       );
-    }, 2000); // Tiempo de espera de 2 segundos (reemplaza con tu lógica real)
+    }, 2000); 
   }
 
-  // Asigna la función de ejecutarConsulta al evento onfocusout del input
+
   cedulaInput.addEventListener("focusout", ejecutarConsulta);
 });

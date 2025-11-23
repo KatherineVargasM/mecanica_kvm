@@ -39,7 +39,7 @@ switch ($_GET["op"]) {
         $res = $Vehiculos->Insertar($id_cliente, $marca, $modelo, $anio, $tipo_motor);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Vehículo guardado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Vehículo registrado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }
@@ -56,7 +56,7 @@ switch ($_GET["op"]) {
         $res = $Vehiculos->Actualizar($id, $id_cliente, $marca, $modelo, $anio, $tipo_motor);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Vehículo actualizado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Vehículo actualizado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }
@@ -67,7 +67,7 @@ switch ($_GET["op"]) {
         $res = $Vehiculos->Eliminar($id);
         
         if($res == "ok"){
-            echo json_encode(["status" => "ok", "mensaje" => "Eliminado correctamente"]);
+            echo json_encode(["status" => "ok", "mensaje" => "Vehículo eliminado"]);
         } else {
             echo json_encode(["status" => "error", "mensaje" => $res]);
         }

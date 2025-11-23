@@ -76,7 +76,7 @@ class Empleados
         $con = $con->ProcedimientoConectar();
         $cadena = "UPDATE empleados SET estado = 0 WHERE id = $id";
         if (mysqli_query($con, $cadena)) return 'ok';
-        else return 'Error al desactivar: ' . mysqli_error($con);
+        else return 'Error al eliminar suave: ' . mysqli_error($con);
     }
 }
 ?>

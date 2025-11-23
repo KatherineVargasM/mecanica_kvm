@@ -1,9 +1,9 @@
 <?php
-//TODO: Requerimientos 
+
 require_once('../config/conexion.php');
 class Accesos
 {
-    /*TODO: Procedimiento para sacar todos los registros*/
+
     public function todos($inicio, $fin, $SucursalId)
     {
         if ($inicio == null || $fin == null) {
@@ -75,7 +75,7 @@ class Accesos
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para sacar un registro*/
+
     public function uno($idAccesos)
     {
         $con = new ClaseConectar();
@@ -85,7 +85,7 @@ class Accesos
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para insertar */
+
     public function Insertar($usuariosId, $IdTipoAcceso)
     {
         $fechaConHorasMinutos = date("YmdHis");
@@ -108,7 +108,7 @@ class Accesos
         $fechaConHorasMinutos = date("YmdHis");
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
-                $imagenBase64 =   $_POST['emplea']; //file_get_contents("php://input");
+                $imagenBase64 =   $_POST['emplea']; 
                 $imagenBinaria = base64_decode($imagenBase64);
                 $carpetaDestino = '../public/images/registros/';
                 if (!file_exists($carpetaDestino)) {
@@ -125,7 +125,7 @@ class Accesos
             return 'no entra al proceso';
         }
     }
-    /*TODO: Procedimiento para actualizar */
+
     public function Actualizar($idAccesos, $Ultimo, $Usuarios_idUsuarios)
     {
         $con = new ClaseConectar();
@@ -138,7 +138,7 @@ class Accesos
         }
         $con->close();
     }
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminar($idAccesos)
     {
         $con = new ClaseConectar();
@@ -151,7 +151,7 @@ class Accesos
         }
         $con->close();
     }
-    //public function reporte_general($inicio, $fin)
+
     public function reporte_general()
     {
         $con = new ClaseConectar();

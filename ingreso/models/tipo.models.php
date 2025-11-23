@@ -1,9 +1,9 @@
 <?php
-//TODO: Requerimientos 
+
 require_once('../config/conexion.php');
 class TipoAcceso
 {
-    /*TODO: Procedimiento para sacar todos los registros*/
+
     public function todos()
     {
         $con = new ClaseConectar();
@@ -13,7 +13,7 @@ class TipoAcceso
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para sacar un registro*/
+
     public function uno($IdTipoAcceso)
     {
         $con = new ClaseConectar();
@@ -23,7 +23,7 @@ class TipoAcceso
         return $datos;
         $con->close();
     }
-    /*TODO: Procedimiento para insertar */
+
     public function Insertar($Detalle)
     {
         $con = new ClaseConectar();
@@ -37,7 +37,7 @@ class TipoAcceso
         }
         $con->close();
     }
-    /*TODO: Procedimiento para actualizar */
+
     public function Actualizar($IdTipoAcceso, $Detalle)
     {
         $con = new ClaseConectar();
@@ -50,7 +50,7 @@ class TipoAcceso
         }
         $con->close();
     }
-    /*TODO: Procedimiento para Eliminar */
+
     public function Eliminar($IdTipoAcceso)
     {
         $con = new ClaseConectar();

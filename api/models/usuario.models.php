@@ -1,5 +1,4 @@
 <?php
-/* CRUD DE USUARIOS*/
 
 require_once('../config/conexion.php');
 

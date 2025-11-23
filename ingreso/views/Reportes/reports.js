@@ -196,7 +196,7 @@ function cargarFaltasEmpleados() {
     });
 }
 
-// Función para generar la lista de todos los días del mes
+
 function generarListaDiasMes(year, month) {
   var diasMes = new Date(year, month, 0).getDate();
   var listaDias = [];
@@ -296,25 +296,23 @@ function downloadExcelTable(tableID, filename = "") {
   const fileType = "application/vnd.ms-excel";
   const selectedTable = document.getElementById(tableID);
 
-  // Clonar la tabla para manipularla sin afectar la original
   const clonedTable = selectedTable.cloneNode(true);
 
-  // Eliminar las columnas 9 y 10 de la tabla clonada
   const rows = clonedTable.getElementsByTagName("tr");
   for (let i = 0; i < rows.length; i++) {
     const cells = rows[i].getElementsByTagName("td");
     if (cells.length > 9) {
-      rows[i].removeChild(cells[9]); // Eliminar la columna 10 (índice 9)
+      rows[i].removeChild(cells[9]); 
     }
     if (cells.length > 8) {
-      rows[i].removeChild(cells[8]); // Eliminar la columna 9 (índice 8)
+      rows[i].removeChild(cells[8]); 
     }
   }
 
-  // Obtener el HTML de la tabla clonada
+
   const selectedTableHTML = clonedTable.outerHTML.replace(/ /g, "%20");
 
-  // Generar el nombre de archivo
+
   var today = new Date();
   var formattedDate =
     today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();

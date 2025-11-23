@@ -15,7 +15,7 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-        <!-- Dashboard -->
+
         <li class="menu-item active">
             <a href="../views/home.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
@@ -23,7 +23,7 @@
             </a>
         </li>
 
-        <!-- Layouts -->
+
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>

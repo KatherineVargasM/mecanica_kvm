@@ -4,7 +4,7 @@ require_once('../../config/sesiones.php');  ?>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-<!-- Basic Bootstrap Table -->
+
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RegAsis /</span> Justificaciones / Faltas</h4>
 
 <div class="card">
@@ -48,7 +48,7 @@ require_once('../../config/sesiones.php');  ?>
                     <th>Tipo Acceso</th>
                     <th>Consultorio</th>
                     <th>Onservaciones</th>
-                    <!-- Agrega más columnas según tu estructura de tabla -->
+
                 </tr>
                 </tr>
             </thead>
@@ -60,7 +60,6 @@ require_once('../../config/sesiones.php');  ?>
 </div>
 
 
-<!-- Modal Usuarios-->
 
 <div class="modal" tabindex="-1" id="ModalUsuarios">
     <div class="modal-dialog modal-dialog-centered modal-lg">

@@ -1,12 +1,12 @@
 <?php
-/*TODO: Requerimientos */
+
 require_once("../config/cors.php");
 require_once("../models/sucursal.models.php");
 error_reporting(0);
 
 $Sucursal = new Sucursales;
 switch ($_GET["op"]) {
-        /*TODO: Procedimiento para listar todos los registros */
+
     case 'todos':
         $datos = array();
         $datos = $Sucursal->todos();
@@ -16,7 +16,7 @@ switch ($_GET["op"]) {
         echo json_encode($todos);
 
         break;
-        /*TODO: Procedimiento para sacar un registro */
+
     case 'uno':
         $SucursalId = $_POST["SucursalId"];
         $datos = array();

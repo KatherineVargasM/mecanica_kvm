@@ -11,7 +11,6 @@ class Servicios
         $con = $con->ProcedimientoConectar();
         $cadena = "SELECT * FROM `servicios`";
         $datos = mysqli_query($con, $cadena);
-        // Cerrar conexión
         $con->close();
         return $datos;
     }
@@ -60,7 +59,7 @@ class Servicios
         if (mysqli_query($con, $cadena)) {
             $respuesta = 'ok';
         } else {
-            $respuesta = 'error al actualizar el registro';
+            $respuesta = 'Error al actualizar';
         }
 
    

@@ -46,7 +46,7 @@ class Tipo_Servicio
         if (mysqli_query($con, $cadena)) {
             return 'ok';
         } else {
-            return 'Error al insertar en la base de datos';
+            return 'Error al insertar';
         }
         $con->close();
     }
@@ -63,7 +63,7 @@ class Tipo_Servicio
 
             return 'ok';
         } else {
-            return 'error al actualizar el registro';
+            return 'Error al actualizar';
         }
         $con->close();
     }

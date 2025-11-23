@@ -1,7 +1,7 @@
 <?php require_once('../html/head2.php');
 require_once('../../config/sesiones.php');  ?>
 
-<!-- Basic Bootstrap Table -->
+
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RegAsis /</span> Tipo de Acceso</h4>
 
 <div class="card">
@@ -27,7 +27,7 @@ require_once('../../config/sesiones.php');  ?>
 </div>
 
 
-<!-- Modal Usuarios-->
+
 
 <div class="modal" tabindex="-1" id="ModalTipo">
     <div class="modal-dialog modal-dialog-centered modal-lg">

@@ -1,13 +1,13 @@
 <?php
-/*TODO: Requerimientos */
+
 require_once("../config/cors.php");
 require_once("../models/faltas.models.php");
-//header('Content-Type: application/json');
+
 error_reporting(0);
 
 $faltas = new Faltas;
 switch ($_GET["op"]) {
-        /*TODO: Procedimiento para listar todos los registros */
+  
     case 'todos':
         $inicio = $_POST["fechainicio"];
         $fin = $_POST["fechafin"];
@@ -19,7 +19,7 @@ switch ($_GET["op"]) {
         }
         echo json_encode($todos);
         break;
-        /*TODO: Procedimiento para sacar un registro */
+    
     case 'uno':
         $idAccesos = $_POST["idAccesos"];
         $datos = array();
@@ -36,7 +36,7 @@ switch ($_GET["op"]) {
         $res = mysqli_fetch_assoc($datos);
         echo json_encode($res);
         break;
-        /*TODO: Procedimiento para insertar */
+
     case 'insertar':
         $EmpleadoId = $_POST["EmpleadoId"];
         $Fecha = $_POST["Fecha"];
@@ -45,7 +45,7 @@ switch ($_GET["op"]) {
         $datos = $faltas->Insertar($EmpleadoId, $Fecha, $Observacion);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para actualizar */
+
 
 
     case 'actualizar':
@@ -57,7 +57,7 @@ switch ($_GET["op"]) {
         $datos = $faltas->Actualizar($FaltaId, $EmpleadoId, $Fecha, $Observacion);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para eliminar */
+
     case 'eliminar':
         $idAccesos = $_POST["idAccesos"];
         $datos = array();

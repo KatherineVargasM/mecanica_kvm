@@ -1,15 +1,15 @@
 <?php
 error_reporting(0);
 
-/*TODO: Requerimientos */
+
 require_once('../config/sesiones.php');
 require_once("../config/cors.php");
 require_once("../models/Empleado.models.php");
 
 $Empleados = new Empleados;
-//$Accesos = new Accesos;
+
 switch ($_GET["op"]) {
-        /*TODO: Procedimiento para listar todos los registros */
+
     case 'todos':
         $datos = array();
         $datos = $Empleados->todos();
@@ -28,9 +28,7 @@ switch ($_GET["op"]) {
         break;
     case 'fechas':
         $inicio = $_POST["inicio"];
-        // $inicio = date("d-m-Y", strtotime($inicio));
         $fin = $_POST["fin"];
-        //$fin = date("d-m-Y", strtotime($fin));
         $todos = array();
         $datos = $Empleados->todos();
         while ($row = mysqli_fetch_assoc($datos)) {
@@ -38,7 +36,7 @@ switch ($_GET["op"]) {
         }
         echo json_encode($todos);
         break;
-        /*TODO: Procedimiento para sacar un registro */
+
     case 'uno':
         $EmpleadoId = $_POST["EmpleadoId"];
         $datos = array();
@@ -67,7 +65,7 @@ switch ($_GET["op"]) {
         $res = mysqli_fetch_assoc($datos);
         echo json_encode($res);
         break;
-        /*TODO: Procedimiento para insertar */
+
     case 'insertar':
         $Nombres = $_POST["Nombres"];
         $Apellidos = $_POST["Apellidos"];
@@ -81,7 +79,7 @@ switch ($_GET["op"]) {
         $datos = $Empleados->Insertar($Nombres, $Apellidos, $Direccion, $Telefono, $Cedula, $Correo, $RolId, $SucursalId);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para actualizar */
+
     case 'actualizar':
         $EmpleadoId = $_POST["EmpleadoId"];
         $Nombres = $_POST["Nombres"];
@@ -96,19 +94,19 @@ switch ($_GET["op"]) {
         $datos = $Empleados->Actualizar($EmpleadoId, $Nombres, $Apellidos, $Direccion, $Telefono, $Cedula, $Correo, $RolId, $SucursalId);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para eliminar */
+
     case 'eliminar':
         $EmpleadoId = $_POST["EmpleadoId"];
         $datos = array();
         $datos = $Empleados->Eliminar($EmpleadoId);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para insertar */
+
 
         $correo = $_POST['correo'];
         $contrasenia = $_POST['contrasenia'];
 
-        //TODO: Si las variables estab vacias rgersa con error
+
         if (empty($correo) or  empty($contrasenia)) {
             header("Location:../login.php?op=2");
             exit();
@@ -122,13 +120,12 @@ switch ($_GET["op"]) {
             header("Location:../login.php?op=1");
             exit();
         }
-        //TODO:Control de si existe el registro en la base de datos
+
         try {
             if (is_array($res) and count($res) > 0) {
-                //if ((md5($contrasenia) == ($res["Contrasenia"]))) {
+
                 if ((($contrasenia) == ($res["Contrasenia"]))) {
-                    //$datos2 = array();
-                    // $datos2 = $Accesos->Insertar(date("Y-m-d H:i:s"), $res["idUsuarios"], 'ingreso');
+
 
                     $_SESSION["idUsuarios"] = $res["idUsuarios"];
                     $_SESSION["Usuarios_Nombres"] = $res["Nombres"];

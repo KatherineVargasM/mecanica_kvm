@@ -1,13 +1,13 @@
 <?php
-/*TODO: Requerimientos */
+
 require_once("../config/cors.php");
 require_once("../models/Accesos.models.php");
-//header('Content-Type: application/json');
+
 error_reporting(0);
 
 $Accesos = new Accesos;
 switch ($_GET["op"]) {
-        /*TODO: Procedimiento para listar todos los registros */
+
     case 'todos':
         $inicio = $_POST["fechainicio"];
         $fin = $_POST["fechafin"];
@@ -28,7 +28,7 @@ switch ($_GET["op"]) {
         }
         echo json_encode($results);
         break;
-        /*TODO: Procedimiento para sacar un registro */
+
     case 'uno':
         $idAccesos = $_POST["idAccesos"];
         $datos = array();
@@ -36,7 +36,7 @@ switch ($_GET["op"]) {
         $res = mysqli_fetch_assoc($datos);
         echo json_encode($res);
         break;
-        /*TODO: Procedimiento para insertar */
+
     case 'insertar':
         $usuariosId = $_POST["usuariosId"];
         $tipo = $_POST["tipo"];
@@ -44,7 +44,7 @@ switch ($_GET["op"]) {
         $datos = $Accesos->Insertar($usuariosId, $tipo);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para actualizar */
+
     case 'actualizar':
         $idAccesos = $_POST["idAccesos"];
         $Ultimo = $_POST["Ultimo"];
@@ -53,7 +53,7 @@ switch ($_GET["op"]) {
         $datos = $Accesos->Actualizar($idAccesos, $Ultimo, $Usuarios_idUsuarios);
         echo json_encode($datos);
         break;
-        /*TODO: Procedimiento para eliminar */
+
     case 'eliminar':
         $idAccesos = $_POST["idAccesos"];
         $datos = array();

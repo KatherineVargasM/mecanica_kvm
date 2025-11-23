@@ -95,7 +95,7 @@ var GuardarEditar = (e) => {
                     CargaLista();
                     LimpiarCajas();
                 } else {
-                    alert("Error al guardar: " + (r.mensaje || "Error desconocido"));
+                    alert("Error al guardar: " + (r.mensaje || "Error"));
                 }
             } catch (error) {
                 console.error(error);
@@ -118,7 +118,7 @@ var eliminar = (id) => {
                     alert("Cliente eliminado");
                     CargaLista();
                 } else {
-                    alert("Error al eliminar: " + (r.mensaje || "Error desconocido"));
+                    alert("Error al eliminar: " + (r.mensaje || "Error"));
                 }
             } catch (error) {
                 console.error("Error al eliminar:", error);

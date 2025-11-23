@@ -5,11 +5,6 @@ require_once('../models/usuario.models.php');
 
 $usuario = new Usuario_Model();
 
-
-/**
- * GET => OP
- * POST => VALORES
- */
 switch($_GET["op"]){
     case "todos":
         $datos = array();
@@ -58,4 +53,3 @@ switch($_GET["op"]){
     default:
         break;
 }
-//
