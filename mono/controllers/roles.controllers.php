@@ -1,22 +1,70 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+header('Content-Type: application/json; charset=utf-8');
 error_reporting(0);
+
 require_once('../config/sesiones.php');
 require_once("../models/roles.models.php");
+
 $Roles = new Roles;
+
 switch ($_GET["op"]) {
+
     case 'todos':
-        $datos = array();
         $datos = $Roles->todos();
+        $lista = array();
         while ($row = mysqli_fetch_assoc($datos)) {
-            $todos[] = $row;
+            $lista[] = $row;
         }
-        echo json_encode($todos);
+        echo json_encode($lista);
         break;
+
     case 'uno':
-        $idRoles = $_POST["idRoles"];
-        $datos = array();
-        $datos = $Roles->uno($idRoles);
+        $id = $_POST["idRol"];
+        $datos = $Roles->uno($id);
         $res = mysqli_fetch_assoc($datos);
         echo json_encode($res);
         break;
+
+    case 'insertar':
+        $nombre = $_POST["nombre"];
+        $descripcion = $_POST["descripcion"];
+        
+        $res = $Roles->Insertar($nombre, $descripcion);
+        
+        if($res == "ok"){
+            echo json_encode(["status" => "ok", "mensaje" => "Rol guardado correctamente"]);
+        } else {
+            echo json_encode(["status" => "error", "mensaje" => $res]);
+        }
+        break;
+
+    case 'actualizar':
+        $id = $_POST["idRol"];
+        $nombre = $_POST["nombre"];
+        $descripcion = $_POST["descripcion"];
+        
+        $res = $Roles->Actualizar($id, $nombre, $descripcion);
+        
+        if($res == "ok"){
+            echo json_encode(["status" => "ok", "mensaje" => "Rol actualizado correctamente"]);
+        } else {
+            echo json_encode(["status" => "error", "mensaje" => $res]);
+        }
+        break;
+
+    case 'eliminar':
+        $id = $_POST["idRol"];
+        $res = $Roles->Eliminar($id);
+        
+        if($res == "ok"){
+            echo json_encode(["status" => "ok", "mensaje" => "Eliminado correctamente"]);
+        } else {
+            echo json_encode(["status" => "error", "mensaje" => $res]);
+        }
+        break;
 }
+?>

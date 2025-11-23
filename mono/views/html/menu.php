@@ -70,8 +70,9 @@
                 </li>
 
                 <li class="menu-item">
-                    <a href="tipo/tipoacceso.views.php" target="base" class="menu-link">
-                        <div data-i18n="Blank">Tipos de Acceso</div>
+                    <a href="Roles/roles.views.php" target="base" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                        <div data-i18n="Roles">Tipos de Acceso</div>
                     </a>
                 </li>
 

@@ -1,65 +1,64 @@
 <?php require_once('../html/head2.php');
 require_once('../../config/sesiones.php');  ?>
 
-
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RegAsis /</span> Cargos</h4>
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RegAsis /</span> Tipos de Acceso</h4>
 
 <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Lista de Roles</h5>
+        <button type="button" class="btn btn-primary" onclick="nuevo()">
+            <i class="bx bx-plus me-1"></i> Nuevo Rol
+        </button>
+    </div>
 
-    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#ModalRoles">Nuevo Cargo</button>
-
-
-    <h5 class="card-header">Lista de Cargos</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Cargo</th>
+                    <th>Nombre del Rol</th>
+                    <th>Descripción</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody class="table-border-bottom-0" id="Roles">
-
-            </tbody>
+            <tbody class="table-border-bottom-0" id="ListaRoles">
+                </tbody>
         </table>
     </div>
 </div>
 
-
-
-
-<div class="modal" tabindex="-1" id="ModalRoles">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade" id="ModalRoles" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="tituloModal"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="tituloModal">Nuevo Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="LimpiarCajas()"></button>
             </div>
 
             <form id="form_roles" method="post">
-                <input type="hidden" name="idRoles" id="idRoles">
+                <input type="hidden" name="idRol" id="idRol">
+                
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="Rol">Detalle</label>
-                        <input type="text" name="Rol" id="Rol" class="form-control" placeholder="Ingrese el cargo" require>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre del Rol</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ej: Administrador" required>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Breve descripción de permisos..."></textarea>
+                    </div>
                 </div>
+                
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="LimpiarCajas()">Cerrar</button>
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
-
-
 <?php require_once('../html/scripts2.php') ?>
-
 <script src="./roles.js"></script>
 
 <!--
