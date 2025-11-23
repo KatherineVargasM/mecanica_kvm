@@ -133,7 +133,7 @@ var eliminar = (idUsuarios) => {
 };
 
 var eliminarsuave = (idUsuarios) => {
-    if (confirm("¿Estás seguro de realizar la eliminación suave de este usuario?")) {
+    if (confirm("¿Realizar eliminación suave?")) {
         $.post(ruta + "eliminarsuave", { idUsuarios: idUsuarios }, (respuesta) => {
             respuesta = JSON.parse(respuesta);
             if (respuesta == "ok") {
