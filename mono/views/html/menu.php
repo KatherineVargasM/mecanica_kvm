@@ -4,7 +4,7 @@
             <span class="app-brand-logo demo">
 
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">UNIANDES</span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">Mecánica</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -39,14 +39,15 @@
                 </li>
 
                 <li class="menu-item">
-                    <a href="tipo_servicio/tipo_servicio.views.php" target="base" class="menu-link">
-                        <div data-i18n="Fluid">Servicios</div>
+                    <a href="Roles/roles.views.php" target="base" class="menu-link">
+                        <div data-i18n="Roles">Acceso/Roles</div>
                     </a>
                 </li>
 
                 <li class="menu-item">
-                    <a href="orden_trabajo/orden_trabajo.views.php" target="base" class="menu-link">
-                        <div data-i18n="Blank">Órdenes de Trabajo</div>
+                    <a href="empleado/empleado.views.php" target="base" class="menu-link">
+                        <?php $_SESSION['rutas'] = 'Empleados'; ?>
+                        <div data-i18n="Without navbar">Empleados</div>
                     </a>
                 </li>
 
@@ -63,31 +64,26 @@
                 </li>
 
                 <li class="menu-item">
-                    <a href="empleado/empleado.views.php" target="base" class="menu-link">
-                        <?php $_SESSION['rutas'] = 'Empleados'; ?>
-                        <div data-i18n="Without navbar">Empleados</div>
+                    <a href="tipo_servicio/tipo_servicio.views.php" target="base" class="menu-link">
+                        <div data-i18n="Fluid">Servicios</div>
                     </a>
                 </li>
 
                 <li class="menu-item">
-                    <a href="Roles/roles.views.php" target="base" class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                        <div data-i18n="Roles">Tipos de Acceso</div>
+                    <a href="orden_trabajo/orden_trabajo.views.php" target="base" class="menu-link">
+                        <div data-i18n="Blank">Órdenes de Trabajo</div>
                     </a>
                 </li>
 
                 <li class="menu-item">
-                    <a href="Reportes/resportes.views.php" target="base" class="menu-link">
+                    <a href="Reportes/reportes.views.php" target="base" class="menu-link">
                         <?php $_SESSION['rutas'] = 'Reportes'; ?>
-                        <div data-i18n="Container">Reportes</div>
+                        <div data-i18n="Container">Reportes de Clientes</div>
                     </a>
                 </li>
 
             </ul>
         </li>
-
-
-
-
+        
     </ul>
 </aside>
