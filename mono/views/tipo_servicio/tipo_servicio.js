@@ -7,14 +7,30 @@ function init() {
 const ruta = "../../controllers/tipo_servicio.controllers.php?op=";
 
 $(document).ready(() => {
-    $('#Tabla_Tipo_Servicio').DataTable({
+    var tabla = $('#Tabla_Tipo_Servicio').DataTable({
         "processing": true,
-        "serverSide": false, 
+        "serverSide": false,
         dom: 'Bfrtip',
-        buttons: ['pdf', 'excel', 'csv', 'print'],
+        buttons: [
+            {
+                extend: 'pdf',
+                className: 'btn btn-success', 
+                text: 'PDF'
+            },
+            {
+                extend: 'excel',
+                className: 'btn btn-primary', 
+                text: 'Excel'
+            },
+            {
+                extend: 'csv',
+                className: 'btn btn-success', 
+                text: 'CSV'
+            }
+        ],
         "ajax": {
             url: ruta + "todos",
-            type: "get", 
+            type: "get",
             dataType: "json",
             error: function(e) {
                 console.log(e.responseText);
@@ -42,6 +58,9 @@ $(document).ready(() => {
             }
         }
     });
+
+    var botonesDT = tabla.buttons().container().find('.btn');
+    $('#botones_accion').prepend(botonesDT);
 });
 
 var GuardarEditar = (e) => {
@@ -68,7 +87,7 @@ var GuardarEditar = (e) => {
         type: "post",
         data: DatosFormularioServicio,
         processData: false,
-        contentType: false, 
+        contentType: false,
         cache: false,
         success: (respuesta) => {
             try {
@@ -76,7 +95,7 @@ var GuardarEditar = (e) => {
                 
                 if (respClean == "ok" || respuesta == "ok") {
                     alert("Se guardó con éxito");
-                    $('#Tabla_Tipo_Servicio').DataTable().ajax.reload(); 
+                    $('#Tabla_Tipo_Servicio').DataTable().ajax.reload();
                     LimpiarCajas();
                 } else {
                     alert("Error al guardar: " + respuesta);
@@ -105,7 +124,7 @@ var uno = async (idTipoServicio) => {
                 document.getElementById("estado").checked = false;
             }
             updateEstadoLabel();
-            $("#ModalTipo_Servicio").modal("show"); 
+            $("#ModalTipo_Servicio").modal("show");
         } catch (e) {
             console.error(e);
         }
@@ -156,12 +175,12 @@ var updateEstadoLabel = () => {
 }
 
 var imprimirTabla = () => {
-   var tabla = document.getElementById("Tabla_Tipo_Servicio").outerHTML; 
+   var tabla = document.getElementById("Tabla_Tipo_Servicio").outerHTML;
    var contenidoOriginal = document.body.innerHTML;
    document.body.innerHTML = tabla;
    window.print();
    document.body.innerHTML = contenidoOriginal;
-   window.location.reload(); 
+   window.location.reload();
 }
 
 init();

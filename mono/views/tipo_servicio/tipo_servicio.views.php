@@ -4,74 +4,47 @@ require_once('../../config/sesiones.php');
 ?>
 
 <style>
+
+    #botones_accion .btn {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0.375rem 0.75rem;
+        color: white !important;
+    }
+
+    #botones_accion .btn:first-child {
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+    }
+    #botones_accion .btn:last-child {
+        border-top-right-radius: 4px !important;
+        border-bottom-right-radius: 4px !important;
+    }
+
+    #botones_accion .btn-success {
+        background-color: #71d329 !important; 
+    }
+    #botones_accion .btn-success:hover {
+        background-color: #5fb322 !important;
+    }
+
+    #botones_accion .btn-primary {
+        background-color: #0055a5 !important;
+    }
+    #botones_accion .btn-primary:hover {
+        background-color: #004485 !important;
+    }
+
     @media print {
-        button, .btn {
+        button, .btn, .dt-buttons, #botones_accion {
             display: none !important;
         }
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .table {
-            width: 100%;
-            max-width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            font-size: 0.9rem;
-        }
-        .table th,
-        .table td {
-            padding: 0.5rem 0.75rem;
-            border-top: 1px solid #dee2e6;
-            vertical-align: middle;
-        }
-
-        .table thead th {
-            border-bottom: 2px solid #dee2e6;
-            background-color: #f8f9fa;
-            font-weight: 600;
-            text-align: left;
-        }
-
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #dee2e6;
-        }
-
-        .table-bordered thead th {
-            border-bottom-width: 2px;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #f8f9fa;
-        }
-
-
-        .table-hover tbody tr:hover {
-            background-color: #e9ecef;
-        }
-
-        .table tbody tr td {
-            color: #212529;
-        }
-
-        .table thead th {
-            color: #212529;
-        }
-
-        @media (max-width: 576px) {
-            .table th,
-            .table td {
-                padding: 0.4rem 0.5rem;
-                font-size: 0.8rem;
-            }
-        }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .table { width: 100%; border-collapse: collapse; background-color: #fff; font-size: 0.9rem; }
+        .table th, .table td { padding: 0.5rem; border: 1px solid #dee2e6; }
+        .table thead th { background-color: #f8f9fa; }
     }
 </style>
 
@@ -81,33 +54,37 @@ require_once('../../config/sesiones.php');
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Lista de Servicios de Mecánica</h5>
         
-        <div class="btn-group">
-            <button type="button" class="btn btn-outline-secondary" onclick="LimpiarCajas()" data-bs-toggle="modal" data-bs-target="#ModalTipo_Servicio">
-                Nuevo Servicio de Mecánica
-            </button>
-
-            <button class="btn btn-success" onclick="imprimirTabla()">Imprimir</button>
-            
-            <a class="btn btn-primary" href="../../controllers/tipo_servicio.controllers.php?op=imprimir" target="_blank">
-                Imprimir FPDF
-            </a>
-        </div>
+        <button type="button" class="btn btn-primary" onclick="LimpiarCajas()" data-bs-toggle="modal" data-bs-target="#ModalTipo_Servicio">
+            + Nuevo Servicio
+        </button>
     </div>
 
-    <div class="table-responsive text-nowrap">
-        <table class="table table-bordered table-striped table-hover" id="Tabla_Tipo_Servicio">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Detalle</th>
-                    <th>Valor</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-            </tbody>
-        </table>
+    <div class="card-body">
+        
+        <div class="mb-3">
+             <div id="botones_accion" class="btn-group" role="group" aria-label="Acciones de tabla">
+                <button class="btn btn-primary" onclick="imprimirTabla()">Imprimir</button>
+                <a class="btn btn-success" href="../../controllers/tipo_servicio.controllers.php?op=imprimir" target="_blank">
+                    Imprimir FPDF
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive text-nowrap">
+            <table class="table table-bordered table-striped table-hover" id="Tabla_Tipo_Servicio">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Detalle</th>
+                        <th>Valor</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
