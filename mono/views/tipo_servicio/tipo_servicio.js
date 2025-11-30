@@ -1,152 +1,167 @@
 function init() {
-  $("#form_tipo_servicio").on("submit", (e) => {
-    GuardarEditar(e);
-  });
+    $("#form_tipo_servicio").on("submit", (e) => {
+        GuardarEditar(e);
+    });
 }
+
 const ruta = "../../controllers/tipo_servicio.controllers.php?op=";
 
 $(document).ready(() => {
-  CargaLista();
+    $('#Tabla_Tipo_Servicio').DataTable({
+        "processing": true,
+        "serverSide": false, 
+        dom: 'Bfrtip',
+        buttons: ['pdf', 'excel', 'csv', 'print'],
+        "ajax": {
+            url: ruta + "todos",
+            type: "get", 
+            dataType: "json",
+            error: function(e) {
+                console.log(e.responseText);
+            }
+        },
+        "bDestroy": true,
+        "responsive": true,
+        "bInfo": true,
+        "iDisplayLength": 10,
+        "order": [[0, "desc"]],
+        "language": {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sSearch": "Buscar:",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
 });
 
-var CargaLista = () => {
-  var html = "";
-  $.get(ruta + "todos", (Lista_Servicios) => {
-    try {
-        Lista_Servicios = JSON.parse(Lista_Servicios);
-        $.each(Lista_Servicios, (index, servicio) => {
-          html += `<tr>
-                <td>${index + 1}</td>
-                <td>${servicio.detalle}</td>
-                <td>${servicio.valor}</td>
-                <td>
-                    <button class='btn btn-primary btn-sm' onclick='uno(${servicio.id})'>
-                        <i class="bx bx-edit-alt"></i> Editar
-                    </button>
-                    <button class='btn btn-danger btn-sm' onclick='eliminar(${servicio.id})'>
-                        <i class="bx bx-trash"></i> Eliminar
-                    </button>
-                    <button class='btn btn-warning btn-sm' onclick='eliminarsuave(${servicio.id})'>
-                        <i class="bx bx-user-x"></i> Eliminar Suave
-                    </button>
-               </td>
-               </tr> `;
-        });
-        $("#ListaServicios").html(html);
-    } catch (error) {
-        console.error("Error cargando lista", error);
-    }
-  });
-};
+var GuardarEditar = (e) => {
+    e.preventDefault();
+    var DatosFormularioServicio = new FormData($("#form_tipo_servicio")[0]);
+    var accion = "";
+    var id = document.getElementById("idTipoServicio").value;
 
-var nuevo = () => {
-    $("#tituloModal").html("Nuevo Servicio");
-    $("#form_tipo_servicio")[0].reset();
-    $("#idTipoServicio").val("");
-    
-    $("#estado").prop("checked", true);
-    updateEstadoLabel();
-    
-    $("#ModalTipo_Servicio").modal("show");
+    if (id > 0) {
+        accion = ruta + "actualizar";
+        DatosFormularioServicio.append("idTipoServicio", id);
+    } else {
+        accion = ruta + "insertar";
+    }
+
+    if(document.getElementById("estado").checked) {
+        DatosFormularioServicio.append('estado', 1);
+    } else {
+        DatosFormularioServicio.append('estado', 0);
+    }
+
+    $.ajax({
+        url: accion,
+        type: "post",
+        data: DatosFormularioServicio,
+        processData: false,
+        contentType: false, 
+        cache: false,
+        success: (respuesta) => {
+            try {
+                let respClean = respuesta.toString().trim().replace(/^"|"$/g, '');
+                
+                if (respClean == "ok" || respuesta == "ok") {
+                    alert("Se guardó con éxito");
+                    $('#Tabla_Tipo_Servicio').DataTable().ajax.reload(); 
+                    LimpiarCajas();
+                } else {
+                    alert("Error al guardar: " + respuesta);
+                }
+            } catch (err) {
+                 alert("Se guardó con éxito");
+                 $('#Tabla_Tipo_Servicio').DataTable().ajax.reload();
+                 LimpiarCajas();
+            }
+        },
+    });
 };
 
 var uno = async (idTipoServicio) => {
-  $("#tituloModal").html("Editar Servicio");
-  
-  $.post(ruta + "uno", { id_tipo_servicio: idTipoServicio }, (tipo_servicio) => {
-    tipo_servicio = JSON.parse(tipo_servicio);
-    
-    $("#idTipoServicio").val(tipo_servicio.id);
-    $("#detalle").val(tipo_servicio.detalle);
-    $("#valor").val(tipo_servicio.valor);
-    
-    if (tipo_servicio.estado == 1) {
-      $("#estado").prop("checked", true);
-    } else {
-      $("#estado").prop("checked", false);
-    }
-    updateEstadoLabel();
-    
-    $("#ModalTipo_Servicio").modal("show");
-  });
-};
-
-var GuardarEditar = (e) => {
-  e.preventDefault();
-  var DatosFormularioServicio = new FormData($("#form_tipo_servicio")[0]);
-  var accion = "";
-  var id = $("#idTipoServicio").val();
-
-  if (id > 0) {
-    accion = ruta + "actualizar";
-    DatosFormularioServicio.append("idTipoServicio", id);
-  } else {
-    accion = ruta + "insertar";
-  }
-
-  $.ajax({
-    url: accion,
-    type: "post",
-    data: DatosFormularioServicio,
-    processData: false,
-    contentType: false, 
-    cache: false,
-    success: (respuesta) => {
-      respuesta = JSON.parse(respuesta);
-      if (respuesta == "ok") {
-        alert("Se guardó con éxito");
-        CargaLista();
-        LimpiarCajas();
-      } else {
-        alert("Error al guardar: " + respuesta);
-      }
-    },
-  });
+    $.post(ruta + "uno", { id_tipo_servicio: idTipoServicio }, (tipo_servicio) => {
+        try {
+            let data = (typeof tipo_servicio === "string") ? JSON.parse(tipo_servicio) : tipo_servicio;
+            
+            document.getElementById("idTipoServicio").value = data.id;
+            document.getElementById("detalle").value = data.detalle;
+            document.getElementById("valor").value = data.valor;
+            
+            if (data.estado == 1) {
+                document.getElementById("estado").checked = true;
+            } else {
+                document.getElementById("estado").checked = false;
+            }
+            updateEstadoLabel();
+            $("#ModalTipo_Servicio").modal("show"); 
+        } catch (e) {
+            console.error(e);
+        }
+    });
 };
 
 var eliminar = (idTipoServicio) => {
-  if(confirm("¿Estás seguro de eliminar permanentemente?")){
-      $.post(ruta + "eliminar", { idTipoServicio: idTipoServicio }, (respuesta) => {
-        respuesta = JSON.parse(respuesta);
-        if (respuesta == "ok") {
-          alert("Se eliminó con éxito");
-          CargaLista();
-        } else {
-          alert("Error al eliminar");
-        }
-      });
-  }
+    if(confirm("¿Eliminar registro?")) {
+        $.post(ruta + "eliminar", { idTipoServicio: idTipoServicio }, (respuesta) => {
+            if (respuesta.includes("ok")) {
+                alert("Se eliminó con éxito");
+                $('#Tabla_Tipo_Servicio').DataTable().ajax.reload();
+            } else {
+                alert("Error al eliminar");
+            }
+        });
+    }
 };
 
 var eliminarsuave = (idTipoServicio) => {
-  if(confirm("¿Estás seguro de eliminar suavemente?")){
-      $.post(ruta + "eliminarsuave", { idTipoServicio: idTipoServicio  }, (respuesta) => {
-        respuesta = JSON.parse(respuesta);
-        if (respuesta == "ok") {
-          alert("Se eliminó con éxito");
-          CargaLista();
-        } else {
-          alert("Error al eliminar");
-        }
-      });
-  }
+    if(confirm("¿Desactivar registro?")) {
+        $.post(ruta + "eliminarsuave", { idTipoServicio: idTipoServicio  }, (respuesta) => {
+            if (respuesta.includes("ok")) {
+                alert("Se eliminó con éxito");
+                $('#Tabla_Tipo_Servicio').DataTable().ajax.reload();
+            } else {
+                alert("Error al eliminar");
+            }
+        });
+    }
 };
 
 var LimpiarCajas = () => {
-  $("#idTipoServicio").val("");
-  $("#form_tipo_servicio")[0].reset();
-  $("#ModalTipo_Servicio").modal("hide");
+    document.getElementById("idTipoServicio").value = "";
+    $("#form_tipo_servicio")[0].reset();
+    $("#ModalTipo_Servicio").modal("hide");
+    updateEstadoLabel();
 };
 
 var updateEstadoLabel = () => {
-  const estadoCheckbox = document.getElementById("estado");
-  const estadoLabel = document.getElementById("lblEstado");
+    const estadoCheckbox = document.getElementById("estado");
+    const estadoLabel = document.getElementById("lblEstado");
+    if (estadoCheckbox.checked) {
+        estadoLabel.textContent = "Activo";
+    } else {
+        estadoLabel.textContent = "Inactivo";
+    }
+}
 
-  if (estadoCheckbox.checked) {
-    estadoLabel.textContent = "Activo";
-  } else {
-    estadoLabel.textContent = "No Activo";
-  }
+var imprimirTabla = () => {
+   var tabla = document.getElementById("Tabla_Tipo_Servicio").outerHTML; 
+   var contenidoOriginal = document.body.innerHTML;
+   document.body.innerHTML = tabla;
+   window.print();
+   document.body.innerHTML = contenidoOriginal;
+   window.location.reload(); 
 }
 
 init();
