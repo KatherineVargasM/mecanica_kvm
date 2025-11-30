@@ -89,7 +89,7 @@ require_once('../../config/sesiones.php');
             <button class="btn btn-success" onclick="imprimirTabla()">Imprimir</button>
             
             <a class="btn btn-primary" href="../../controllers/tipo_servicio.controllers.php?op=imprimir" target="_blank">
-                Imprimir con fpdf
+                Imprimir FPDF
             </a>
         </div>
     </div>

@@ -89,6 +89,45 @@ switch ($_GET["op"]) {
         break;
         
     case 'imprimir':
+        define('FPDF_FONTPATH', '../views/tipo_servicio/fpdf/font/');
+        $ruta_fpdf = '../views/tipo_servicio/fpdf/fpdf.php';
+        
+        if (file_exists($ruta_fpdf)) {
+            require_once($ruta_fpdf);
+        } else {
+            die("Error: No se encuentra FPDF en: " . realpath($ruta_fpdf));
+        }
+
+        $datos = $Tipo_Servicio->todos();
+        ob_clean(); 
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetMargins(10, 10, 10);
+        $pdf->SetAutoPageBreak(true, 20);
+
+        $pdf->SetFont('Arial', 'B', 16);
+        $pdf->Cell(0, 10, 'Reporte de Servicios de Mecanica', 0, 1, 'C');
+        $pdf->Ln(10);
+
+        $pdf->SetFillColor(230, 230, 230);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(15, 10, '#', 1, 0, 'C', true);
+        $pdf->Cell(100, 10, 'Detalle', 1, 0, 'C', true);
+        $pdf->Cell(35, 10, 'Valor', 1, 0, 'C', true);
+        $pdf->Cell(40, 10, 'Estado', 1, 1, 'C', true);
+
+        $pdf->SetFont('Arial', '', 10);
+        while ($row = mysqli_fetch_assoc($datos)) {
+            $estado = ($row["estado"] == 1) ? 'Activo' : 'Inactivo';
+            
+            $pdf->Cell(15, 10, $row["id"], 1, 0, 'C');
+            $pdf->Cell(100, 10, utf8_decode($row["detalle"]), 1, 0, 'L');
+            $pdf->Cell(35, 10, '$ ' . number_format($row["valor"], 2), 1, 0, 'R');
+            $pdf->Cell(40, 10, $estado, 1, 1, 'C');
+        }
+
+        $pdf->Output('D', 'Reporte_Servicios.pdf');
         break;
 }
 ?>
