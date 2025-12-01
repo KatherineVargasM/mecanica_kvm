@@ -4,7 +4,6 @@ require_once('../../config/sesiones.php');
 ?>
 
 <style>
-    /* --- ESTILOS PARA EL GRUPO DE BOTONES FUSIONADOS --- */
     #botones_accion .btn {
         margin: 0 !important;
         border-radius: 0 !important;
@@ -13,8 +12,6 @@ require_once('../../config/sesiones.php');
         padding: 0.375rem 0.75rem;
         color: white !important;
     }
-
-    /* Redondear esquinas exteriores del grupo */
     #botones_accion .btn:first-child {
         border-top-left-radius: 4px !important;
         border-bottom-left-radius: 4px !important;
@@ -24,14 +21,12 @@ require_once('../../config/sesiones.php');
         border-bottom-right-radius: 4px !important;
     }
 
-    /* COLORES EXACTOS */
     #botones_accion .btn-success { background-color: #71d329 !important; }
     #botones_accion .btn-success:hover { background-color: #5fb322 !important; }
 
     #botones_accion .btn-primary { background-color: #0055a5 !important; }
     #botones_accion .btn-primary:hover { background-color: #004485 !important; }
 
-    /* Ajuste para el buscador */
     .dataTables_filter {
         margin-bottom: 0 !important;
     }

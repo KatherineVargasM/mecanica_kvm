@@ -84,11 +84,8 @@ $(document).ready(() => {
         }
     });
 
-    // 1. Mueve los botones generados al grupo de botones
     var botonesDT = tabla.buttons().container().find('.btn');
     $('#botones_accion').prepend(botonesDT);
-
-    // 2. Mueve la barra de búsqueda al contenedor personalizado a la derecha
     $('#Tabla_Tipo_Servicio_filter').appendTo('#buscador_personalizado');
 });
 
