@@ -4,7 +4,7 @@ require_once('../../config/sesiones.php');
 ?>
 
 <style>
-
+    /* --- ESTILOS PARA EL GRUPO DE BOTONES FUSIONADOS --- */
     #botones_accion .btn {
         margin: 0 !important;
         border-radius: 0 !important;
@@ -14,6 +14,7 @@ require_once('../../config/sesiones.php');
         color: white !important;
     }
 
+    /* Redondear esquinas exteriores del grupo */
     #botones_accion .btn:first-child {
         border-top-left-radius: 4px !important;
         border-bottom-left-radius: 4px !important;
@@ -23,22 +24,26 @@ require_once('../../config/sesiones.php');
         border-bottom-right-radius: 4px !important;
     }
 
-    #botones_accion .btn-success {
-        background-color: #71d329 !important; 
-    }
-    #botones_accion .btn-success:hover {
-        background-color: #5fb322 !important;
-    }
+    /* COLORES EXACTOS */
+    #botones_accion .btn-success { background-color: #71d329 !important; }
+    #botones_accion .btn-success:hover { background-color: #5fb322 !important; }
 
-    #botones_accion .btn-primary {
-        background-color: #0055a5 !important;
+    #botones_accion .btn-primary { background-color: #0055a5 !important; }
+    #botones_accion .btn-primary:hover { background-color: #004485 !important; }
+
+    /* Ajuste para el buscador */
+    .dataTables_filter {
+        margin-bottom: 0 !important;
     }
-    #botones_accion .btn-primary:hover {
-        background-color: #004485 !important;
+    .dataTables_filter label {
+        margin-bottom: 0 !important;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
     @media print {
-        button, .btn, .dt-buttons, #botones_accion {
+        button, .btn, .dt-buttons, #botones_accion, #buscador_personalizado {
             display: none !important;
         }
         .table-responsive { width: 100%; overflow-x: auto; }
@@ -61,13 +66,17 @@ require_once('../../config/sesiones.php');
 
     <div class="card-body">
         
-        <div class="mb-3">
-             <div id="botones_accion" class="btn-group" role="group" aria-label="Acciones de tabla">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            
+            <div id="botones_accion" class="btn-group" role="group" aria-label="Acciones de tabla">
                 <button class="btn btn-primary" onclick="imprimirTabla()">Imprimir</button>
                 <a class="btn btn-success" href="../../controllers/tipo_servicio.controllers.php?op=imprimir" target="_blank">
                     Imprimir FPDF
                 </a>
             </div>
+
+            <div id="buscador_personalizado"></div>
+
         </div>
 
         <div class="table-responsive text-nowrap">

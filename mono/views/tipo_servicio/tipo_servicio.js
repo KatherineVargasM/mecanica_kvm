@@ -15,17 +15,42 @@ $(document).ready(() => {
             {
                 extend: 'pdf',
                 className: 'btn btn-success', 
-                text: 'PDF'
+                text: 'PDF',
+                title: 'Reporte de Servicios de Mecánica',
+                filename: 'Reporte_de_Servicios_Mecanica',
+                exportOptions: {
+                    columns: [0, 1, 2, 3]
+                },
+                customize: function(doc) {
+                    doc.styles.title = {
+                        color: 'black',
+                        fontSize: '20',
+                        alignment: 'center'
+                    };
+                    doc.styles.tableHeader.alignment = 'center'; 
+                    doc.defaultStyle.alignment = 'center';
+                    doc.content[1].table.widths = ['10%', '50%', '20%', '20%']; 
+                }
             },
             {
                 extend: 'excel',
                 className: 'btn btn-primary', 
-                text: 'Excel'
+                text: 'Excel',
+                title: 'Reporte de Servicios de Mecánica',
+                filename: 'Reporte_de_Servicios_Mecanica',
+                exportOptions: {
+                    columns: [0, 1, 2, 3]
+                }
             },
             {
                 extend: 'csv',
                 className: 'btn btn-success', 
-                text: 'CSV'
+                text: 'CSV',
+                title: 'Reporte de Servicios de Mecánica',
+                filename: 'Reporte_de_Servicios_Mecanica',
+                exportOptions: {
+                    columns: [0, 1, 2, 3]
+                }
             }
         ],
         "ajax": {
@@ -59,8 +84,12 @@ $(document).ready(() => {
         }
     });
 
+    // 1. Mueve los botones generados al grupo de botones
     var botonesDT = tabla.buttons().container().find('.btn');
     $('#botones_accion').prepend(botonesDT);
+
+    // 2. Mueve la barra de búsqueda al contenedor personalizado a la derecha
+    $('#Tabla_Tipo_Servicio_filter').appendTo('#buscador_personalizado');
 });
 
 var GuardarEditar = (e) => {
@@ -95,7 +124,7 @@ var GuardarEditar = (e) => {
                 
                 if (respClean == "ok" || respuesta == "ok") {
                     alert("Se guardó con éxito");
-                    $('#Tabla_Tipo_Servicio').DataTable().ajax.reload();
+                    $('#Tabla_Tipo_Servicio').DataTable().ajax.reload(); 
                     LimpiarCajas();
                 } else {
                     alert("Error al guardar: " + respuesta);
@@ -118,13 +147,15 @@ var uno = async (idTipoServicio) => {
             document.getElementById("detalle").value = data.detalle;
             document.getElementById("valor").value = data.valor;
             
+            document.getElementById("tituloModal").innerHTML = "Editar Servicio de Mecánica";
+
             if (data.estado == 1) {
                 document.getElementById("estado").checked = true;
             } else {
                 document.getElementById("estado").checked = false;
             }
             updateEstadoLabel();
-            $("#ModalTipo_Servicio").modal("show");
+            $("#ModalTipo_Servicio").modal("show"); 
         } catch (e) {
             console.error(e);
         }
@@ -159,6 +190,7 @@ var eliminarsuave = (idTipoServicio) => {
 
 var LimpiarCajas = () => {
     document.getElementById("idTipoServicio").value = "";
+    document.getElementById("tituloModal").innerHTML = "Nuevo Servicio de Mecánica";
     $("#form_tipo_servicio")[0].reset();
     $("#ModalTipo_Servicio").modal("hide");
     updateEstadoLabel();
@@ -175,12 +207,30 @@ var updateEstadoLabel = () => {
 }
 
 var imprimirTabla = () => {
-   var tabla = document.getElementById("Tabla_Tipo_Servicio").outerHTML;
+   var tablaOriginal = document.getElementById("Tabla_Tipo_Servicio");
+   var tablaClone = tablaOriginal.cloneNode(true);
+
+   var theadRow = tablaClone.querySelector("thead tr");
+   if (theadRow && theadRow.lastElementChild) {
+       theadRow.removeChild(theadRow.lastElementChild);
+   }
+
+   var tbodyRows = tablaClone.querySelectorAll("tbody tr");
+   tbodyRows.forEach(row => {
+       if (row.lastElementChild) {
+           row.removeChild(row.lastElementChild);
+       }
+   });
+
+   var titulo = '<h2 style="text-align: center; margin-bottom: 20px;">Reporte de Servicios de Mecánica</h2>';
+
    var contenidoOriginal = document.body.innerHTML;
-   document.body.innerHTML = tabla;
+   document.body.innerHTML = titulo + tablaClone.outerHTML;
+   
    window.print();
+   
    document.body.innerHTML = contenidoOriginal;
-   window.location.reload();
+   window.location.reload(); 
 }
 
 init();
