@@ -1,0 +1,27 @@
+<div class="component-header-blue">
+    <span class="component-header-title">{{ pageTitle }}</span>
+</div>
+
+<div class="table-container">
+    <p>Este es el área de formulario del empleado.</p>
+    <div *ngIf="isEditMode">
+        <p>Estás editando al empleado con ID: <strong>{{ empleadoId }}</strong></p>
+    </div>
+    <div *ngIf="!isEditMode">
+        <p>Estás creando un nuevo empleado.</p>
+    </div>
+
+    <form class="mt-4">
+        <div class="mb-3">
+            <label for="cedula" class="form-label">Cédula</label>
+            <input type="text" class="form-control" id="cedula">
+        </div>
+        <div class="mb-3">
+            <label for="nombres" class="form-label">Nombres</label>
+            <input type="text" class="form-control" id="nombres">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-secondary ms-2" [routerLink]="['/empleados']">Cancelar</button>
+    </form>
+</div>

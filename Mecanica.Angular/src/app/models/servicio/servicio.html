@@ -1,0 +1,97 @@
+<div class="component-header-blue">
+    <span class="component-header-title">GESTIÓN DE SERVICIOS</span>
+    <button class="btn-new-empleado" (click)="nuevoServicio()">
+        Nuevo Servicio
+    </button>
+</div>
+
+<div class="table-container">
+
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!errorMessage">
+        <table class="table table-striped table-hover table-bordered"> 
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Vehículo</th>
+                    <th>Cliente</th>
+                    <th>Fecha de Servicio</th>
+                    <th>Acciones</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let servicio of servicios">
+                    <td>{{ servicio.id }}</td>
+                    <td>{{ servicio.vehiculo?.marca }} / {{ servicio.vehiculo?.modelo }}</td> 
+                    <td>{{ servicio.usuario?.nombre_usuario }}</td> 
+                    <td>{{ servicio.fecha_servicio | date:'dd/MM/yyyy h:mm a' }}</td>
+                    <td>
+                        <button class="btn-action btn-edit" (click)="editarServicio(servicio)">
+                            Editar
+                        </button>
+                        <button class="btn-action btn-delete" (click)="eliminarServicio(servicio.id)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="servicios.length === 0" class="alert alert-warning">
+            No se encontraron servicios registrados.
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalServicio" tabindex="-1" 
+      [attr.aria-hidden]="!isModalOpen"  [class.show]="isModalOpen" [style.display]="isModalOpen ? 'block' : 'none'">
+    
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <div class="modal-header-custom">
+                <h5 class="modal-title">{{ modalTitle }}</h5>
+                <button type="button" class="btn-close-white" (click)="closeModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                
+                <div class="form-group-horizontal">
+                    <label for="vehiculoId" class="custom-label">ID Vehículo:</label>
+                    <input type="number" id="vehiculoId" class="form-control"
+                           [(ngModel)]="currentServicio.id_vehiculo">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="clienteId" class="custom-label">ID Cliente:</label>
+                    <input type="number" id="clienteId" class="form-control"
+                           [(ngModel)]="currentServicio.id_usuario">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="descripcion" class="custom-label">Descripción:</label>
+                    <input type="text" id="descripcion" class="form-control"
+                           [(ngModel)]="currentServicio.descripcion">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="costo" class="custom-label">Costo ($):</label>
+                    <input type="number" id="costo" class="form-control"
+                           [(ngModel)]="currentServicio.costo">
+                </div>
+                
+            </div>
+            
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-custom-cancel" (click)="closeModal()">Cancelar</button>
+                <button type="button" class="btn-custom-save" (click)="guardarServicio()">Guardar Servicio</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isModalOpen" class="modal-backdrop fade show"></div>

@@ -32,6 +32,12 @@
 
             <ul class="menu-sub">
 
+            <li class="menu-item">
+                    <a href="noticias/noticias.views.php" target="base" class="menu-link">
+                        <div data-i18n="Blank">Noticias</div>
+                    </a>
+                </li>
+
                 <li class="menu-item">
                     <a href="usuarios/usuarios.views.php" target="base" class="menu-link">
                         <div data-i18n="Blank">Usuarios</div>

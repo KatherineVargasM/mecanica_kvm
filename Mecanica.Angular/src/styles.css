@@ -1,0 +1,25 @@
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.table {
+    border: none !important; 
+}
+
+.table th {
+    text-align: left; 
+}
+
+.table th, .table td {
+    padding: 0.75rem 1.25rem; 
+    border: 1px solid #2b7c91!important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f8f9fa;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #e2e6ea !important;
+}

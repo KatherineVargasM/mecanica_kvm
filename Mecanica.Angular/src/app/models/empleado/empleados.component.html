@@ -1,0 +1,116 @@
+<div class="component-header-blue">
+    <span class="component-header-title">GESTIÓN DE EMPLEADOS</span>
+    <button class="btn-new-empleado" (click)="nuevoEmpleado()">
+        Nuevo Empleado
+    </button>
+</div>
+
+<div class="table-container">
+
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!errorMessage">
+        <table class="table table-striped table-hover table-bordered"> 
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cédula</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Cargo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let empleado of empleados">
+                    <td>{{ empleado.id }}</td>
+                    <td>{{ empleado.cedula }}</td>
+                    <td>{{ empleado.nombres }}</td>
+                    <td>{{ empleado.apellidos }}</td>
+                    <td>{{ empleado.cargo }}</td>
+                    <td>{{ empleado.estado === 1 ? 'Activo' : 'Inactivo' }}</td>
+                    <td>
+                        <button class="btn-action btn-edit" (click)="editarEmpleado(empleado)">
+                            Editar
+                        </button>
+                        <button *ngIf="empleado.estado === 1" class="btn-action btn-soft-delete" (click)="eliminarSuave(empleado)">
+                            Eliminar Suave
+                        </button>
+                        <button class="btn-action btn-delete" (click)="eliminarEmpleado(empleado.id)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="empleados.length === 0" class="alert alert-warning">
+            No se encontraron empleados registrados.
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalEmpleado" tabindex="-1" aria-hidden="true" 
+     [class.show]="isModalOpen" [style.display]="isModalOpen ? 'block' : 'none'">
+    
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <div class="modal-header-custom">
+                <h5 class="modal-title">{{ modalTitle }}</h5>
+                <button type="button" class="btn-close-white" (click)="closeModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                
+                <div class="form-group-horizontal">
+                    <label for="cedula" class="custom-label">Cédula:</label>
+                    <input type="text" id="cedula" class="form-control"
+                           [(ngModel)]="currentEmpleado.cedula">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="nombres" class="custom-label">Nombres:</label>
+                    <input type="text" id="nombres" class="form-control"
+                           [(ngModel)]="currentEmpleado.nombres">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="apellidos" class="custom-label">Apellidos:</label>
+                    <input type="text" id="apellidos" class="form-control"
+                           [(ngModel)]="currentEmpleado.apellidos">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="cargo" class="custom-label">Cargo:</label>
+                    <input type="text" id="cargo" class="form-control"
+                           [(ngModel)]="currentEmpleado.cargo">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="correo" class="custom-label">Correo:</label>
+                    <input type="email" id="correo" class="form-control"
+                           [(ngModel)]="currentEmpleado.correo">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label for="telefono" class="custom-label">Teléfono:</label>
+                    <input type="text" id="telefono" class="form-control"
+                           [(ngModel)]="currentEmpleado.telefono">
+                </div>
+
+            </div>
+            
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-custom-cancel" (click)="closeModal()">Cancelar</button>
+                <button type="button" class="btn-custom-save" (click)="guardarEmpleado()">Guardar Empleado</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isModalOpen" class="modal-backdrop fade show"></div>
